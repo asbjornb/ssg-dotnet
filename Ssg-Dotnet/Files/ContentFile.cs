@@ -1,4 +1,4 @@
-﻿namespace ssg_dotnet.Files;
+﻿namespace Ssg_Dotnet.Files;
 
 internal abstract class ContentFile
 {
