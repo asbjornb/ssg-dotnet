@@ -3,10 +3,10 @@ using Ssg_Dotnet.Processors;
 namespace Ssg_Dotnet.Test;
 
 [TestFixture, Parallelizable(ParallelScope.Self)]
-public class Tests
+public class MarkdownProcessorTests
 {
     [Test]
-    public void MarkdownProcessorTests()
+    public void ShouldProcessEmptyContent()
     {
         const string markdownContent = "";
         var sut = new MarkdownProcessor();
