@@ -1,6 +1,4 @@
-﻿using Ssg_Dotnet.Files;
-
-namespace Ssg_Dotnet.Processors;
+﻿namespace Ssg_Dotnet.Processors;
 
 internal class MarkdownProcessor
 {
