@@ -1,17 +1,8 @@
 ﻿namespace ssg_dotnet.Files;
 
-internal class OutputFile
+internal class OutputFile : ContentFile
 {
-    public string Path { get; }
-    public string FileName { get; }
-    public string Content { get; }
-    public string Extension { get; }
-
-    public OutputFile(string path, string fileName, string content, string extension)
+    public OutputFile(string path, string fileName, string content, string extension) : base(path, fileName, content, extension)
     {
-        Path = path;
-        FileName = fileName;
-        Content = content;
-        Extension = extension;
     }
 }
