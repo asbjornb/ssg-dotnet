@@ -1,6 +1,6 @@
 using Cottle;
 
-namespace Ssg_Dotnet.Test;
+namespace Ssg_Dotnet.Test.ExplorationTest;
 //Some exploration of the Cottle library to assert that it supports the features wanted
 [TestFixture, Parallelizable(ParallelScope.Self)]
 public class CottleTests
@@ -26,9 +26,9 @@ public class CottleTests
         var document = Document.CreateDefault(template, configuration).DocumentOrThrow;
         var result = document.Render(
             Context.CreateBuiltin(new Dictionary<Value, Value>
-        {
-            ["content"] = "<h1>Hello World</h1>"
-        }));
+            {
+                ["content"] = "<h1>Hello World</h1>"
+            }));
         Assert.That(result, Is.Not.Null);
         Assert.That(result, Is.EqualTo("<main>\n        <h1>Hello World</h1>\n    </main>\n"));
     }

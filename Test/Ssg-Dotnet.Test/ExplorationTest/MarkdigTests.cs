@@ -1,6 +1,6 @@
 using Ssg_Dotnet.Processors;
 
-namespace Ssg_Dotnet.Test;
+namespace Ssg_Dotnet.Test.ExplorationTest;
 //Some exploration of the Markdig library to assert that it supports the features wanted
 [TestFixture, Parallelizable(ParallelScope.Self)]
 public class MarkDigTests
