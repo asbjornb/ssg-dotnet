@@ -24,7 +24,7 @@ internal static class FileProcessor
             if (file.Extension == ".md")
             {
                 var input = await FileHandler.ReadFileAsync(file);
-                var output = Markdown.ToHtml(input.Content);
+                var output = Markdown.ToHtml(input);
                 var outputDirectory = file.DirectoryPath.Replace(inputFolder, outputFolder);
                 if (!Directory.Exists(outputDirectory))
                 {

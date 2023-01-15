@@ -38,8 +38,7 @@ public class FilePathTests
     {
         var filePath = FilePath.FromFullPath(fullPath);
         var content = await FileHandler.ReadFileAsync(filePath);
-        content.Should().NotBeNull();
-        content.Content.Should().Be(Content);
+        content.Should().Be(Content);
     }
 
     [Test]

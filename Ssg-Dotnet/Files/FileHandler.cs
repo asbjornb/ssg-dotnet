@@ -4,10 +4,9 @@ using System.Threading.Tasks;
 namespace Ssg_Dotnet.Files;
 internal static class FileHandler
 {
-    public static async Task<ContentFile> ReadFileAsync(FilePath path)
+    public static async Task<string> ReadFileAsync(FilePath path)
     {
-        var content = await File.ReadAllTextAsync(path.FullPath);
-        return new ContentFile(path, content);
+        return await File.ReadAllTextAsync(path.FullPath);
     }
 
     public static async Task WriteFileAsync(string filepath, string content)
