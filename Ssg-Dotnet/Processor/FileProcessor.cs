@@ -18,8 +18,7 @@ internal static class FileProcessor
         {
             Directory.CreateDirectory(outputFolder);
         }
-        var filesToProcess = FileFinder.FindFiles(inputFolder);
-        foreach(var file in filesToProcess)
+        foreach (var file in FileFinder.FindFiles(inputFolder))
         {
             if (file.Extension == ".md")
             {

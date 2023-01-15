@@ -18,5 +18,7 @@ internal record FilePath(string DirectoryPath, string FileName, string Extension
         );
     }
 
-    public string FullPath => Path.Combine(DirectoryPath, FileName + Extension);
+    public string FileNameWithExtension => FileName + Extension;
+
+    public string FullPath => Path.Combine(DirectoryPath, FileNameWithExtension);
 }

@@ -12,7 +12,7 @@ internal static class FileSystemSetup
         {
             Directory.CreateDirectory(FolderName);
         }
-        foreach(var file in Files)
+        foreach (var file in Files)
         {
             File.WriteAllText($"{FolderName}/{file}", "SomeText");
         }

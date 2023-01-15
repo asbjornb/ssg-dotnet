@@ -1,4 +1,3 @@
-using FluentAssertions;
 using Ssg_Dotnet.Files;
 
 namespace Ssg_Dotnet.Test.FileSystemReliantTests;
@@ -23,7 +22,7 @@ public class FileFinderTests
     {
         var files = FileFinder.FindFiles(FileSystemSetup.FolderName);
         files.Should().HaveCount(FileSystemSetup.Files.Count);
-        foreach(var file in FileSystemSetup.Files)
+        foreach (var file in FileSystemSetup.Files)
         {
             files.Select(x => x.FileName + x.Extension).Should().Contain(file);
         }
