@@ -1,9 +1,0 @@
-﻿namespace Ssg_Dotnet.Processors;
-
-internal class MarkdownProcessor
-{
-    public string? ParseToHtmlContent(string markdownContent)
-    {
-        return Markdig.Markdown.ToHtml(markdownContent);
-    }
-}
