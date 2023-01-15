@@ -25,12 +25,8 @@ internal static class FileProcessor
                 var input = await FileHandler.ReadFileAsync(file);
                 var output = Markdown.ToHtml(input);
                 var outputDirectory = file.DirectoryPath.Replace(inputFolder, outputFolder);
-                if (!Directory.Exists(outputDirectory))
-                {
-                    Directory.CreateDirectory(outputDirectory);
-                }
-                var outputFilePath = Path.Combine(outputDirectory, file.FileName + ".html");
-                await FileHandler.WriteFileAsync(outputFilePath, output);
+                var outputFile = file! with { DirectoryPath = outputDirectory, Extension = ".html" };
+                await FileHandler.WriteFileAsync(outputFile, output);
             }
             else
             {

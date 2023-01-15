@@ -9,9 +9,13 @@ internal static class FileHandler
         return await File.ReadAllTextAsync(path.FullPath);
     }
 
-    public static async Task WriteFileAsync(string filepath, string content)
+    public static async Task WriteFileAsync(FilePath filepath, string content)
     {
-        await File.WriteAllTextAsync(filepath, content);
+        if (!Directory.Exists(filepath.DirectoryPath))
+        {
+            Directory.CreateDirectory(filepath.DirectoryPath);
+        }
+        await File.WriteAllTextAsync(filepath.FullPath, content);
     }
 
     public static void CopyFile(FilePath path, string destinationFolder)
