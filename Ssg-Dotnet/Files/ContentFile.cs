@@ -1,17 +1,13 @@
 ﻿namespace Ssg_Dotnet.Files;
 
-internal abstract class ContentFile
+internal class ContentFile
 {
-    public string Path { get; }
-    public string FileName { get; }
+    public FilePath FilePath { get; }
     public string Content { get; }
-    public string Extension { get; }
 
-    protected ContentFile(string path, string fileName, string content, string extension)
+    internal ContentFile(FilePath filePath, string content)
     {
-        Path = path;
-        FileName = fileName;
+        FilePath = filePath;
         Content = content;
-        Extension = extension;
     }
 }
