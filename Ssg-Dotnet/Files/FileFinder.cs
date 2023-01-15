@@ -8,12 +8,12 @@ internal static class FileFinder
     public static IEnumerable<FilePath> FindFiles(string directoryPath, string extension)
     {
         var files = Directory.GetFiles(directoryPath, $"*{extension}", SearchOption.AllDirectories);
-        return files.Select(file => new FilePath(file));
+        return files.Select(FilePath.FromFullPath);
     }
 
     public static IEnumerable<FilePath> FindFiles(string directoryPath)
     {
         var files = Directory.GetFiles(directoryPath, "*.*", SearchOption.AllDirectories);
-        return files.Select(file => new FilePath(file));
+        return files.Select(FilePath.FromFullPath);
     }
 }

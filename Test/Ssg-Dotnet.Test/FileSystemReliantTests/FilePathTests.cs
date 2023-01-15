@@ -8,7 +8,7 @@ public class FilePathTests
 {
     private const string FileName = "now.md";
     private const string Content = "Some content";
-    private string fullPath = Path.Combine(FileSystemSetup.FolderName, FileName);
+    private readonly string fullPath = Path.Combine(FileSystemSetup.FolderName, FileName);
 
     [SetUp]
     public void SetUp()
@@ -25,7 +25,7 @@ public class FilePathTests
     [Test]
     public void ShouldCreatePath()
     {
-        var filePath = new FilePath(fullPath);
+        var filePath = FilePath.FromFullPath(fullPath);
         filePath.Should().NotBeNull();
         filePath.FullPath.Should().EndWith(FileName);
         filePath.DirectoryPath.Should().NotBeNull();
@@ -36,9 +36,17 @@ public class FilePathTests
     [Test]
     public async Task ShouldReadContent()
     {
-        var filePath = new FilePath(fullPath);
-        var content = await filePath.ReadFile();
+        var filePath = FilePath.FromFullPath(fullPath);
+        var content = await FileHandler.ReadFileAsync(filePath);
         content.Should().NotBeNull();
         content.Content.Should().Be(Content);
+    }
+
+    [Test]
+    public void ShouldDeleteFile()
+    {
+        var filePath = FilePath.FromFullPath(fullPath);
+        FileHandler.DeleteFile(filePath);
+        File.Exists(filePath.FullPath).Should().BeFalse();
     }
 }
