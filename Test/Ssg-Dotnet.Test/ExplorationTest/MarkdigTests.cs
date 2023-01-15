@@ -1,6 +1,7 @@
-using Ssg_Dotnet.Processors;
+using Markdig;
 
 namespace Ssg_Dotnet.Test.ExplorationTest;
+
 //Some exploration of the Markdig library to assert that it supports the features wanted
 [TestFixture, Parallelizable(ParallelScope.Self)]
 public class MarkDigTests
@@ -9,7 +10,7 @@ public class MarkDigTests
     public void ShouldProcessHeader()
     {
         const string markdownContent = "# SomeHeader\n";
-        var result = Markdig.Markdown.ToHtml(markdownContent);
+        var result = Markdown.ToHtml(markdownContent);
         Assert.That(result, Is.Not.Null);
         Assert.That(result, Is.EqualTo("<h1>SomeHeader</h1>\n"));
     }
