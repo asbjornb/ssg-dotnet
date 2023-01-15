@@ -15,6 +15,10 @@ internal static class FileHandler
         {
             Directory.CreateDirectory(filepath.DirectoryPath);
         }
+        if (File.Exists(filepath.FullPath))
+        {
+            DeleteFile(filepath);
+        }
         await File.WriteAllTextAsync(filepath.FullPath, content);
     }
 
