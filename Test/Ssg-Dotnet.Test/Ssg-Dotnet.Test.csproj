@@ -28,7 +28,7 @@
     <None Update="TestSamples\index.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestSamples\configuration.json">
+    <None Update="TestSamples\passthrough.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="TestSamples\now.md">

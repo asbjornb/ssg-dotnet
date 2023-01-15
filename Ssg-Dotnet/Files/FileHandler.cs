@@ -10,9 +10,9 @@ internal static class FileHandler
         return new ContentFile(path, content);
     }
 
-    public static async Task WriteFileAsync(ContentFile file)
+    public static async Task WriteFileAsync(string filepath, string content)
     {
-        await File.WriteAllTextAsync(file.FilePath.FullPath, file.Content);
+        await File.WriteAllTextAsync(filepath, content);
     }
 
     public static void CopyFile(FilePath path, string destinationFolder)
