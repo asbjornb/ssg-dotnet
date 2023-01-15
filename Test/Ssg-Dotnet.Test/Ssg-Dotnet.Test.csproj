@@ -23,4 +23,16 @@
     <ProjectReference Include="..\..\ssg-dotnet\Ssg-Dotnet.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="TestSamples\index.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestSamples\configuration.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestSamples\now.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
