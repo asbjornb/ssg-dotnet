@@ -23,6 +23,20 @@ internal class FileProcessorTests
         File.ReadAllText(outputFiles.First(x => x.EndsWith("passthrough.html"))).Should().Be("<head><title>TestTitle</title></head>\r\n<body>\r\n<p>Hello</p>\r\n</body>\r\n");
     }
 
+    [Test]
+    public async Task ShouldProcessNestedFiles()
+    {
+        // Act
+        await FileProcessor.ProcessFiles(InputFolder, OutputFolder);
+
+        // Assert
+        var outputFiles = Directory.GetFiles(OutputFolder, "Blog\\*.*", SearchOption.AllDirectories);
+        outputFiles.Should().HaveCount(1);
+        var outputFile = outputFiles.Single();
+        outputFile.Should().EndWith("Blog\\post1.html");
+        File.ReadAllText(outputFile).Should().Be("<h1>Some post</h1>\n");
+    }
+
     [TearDown]
     public void TearDown()
     {
