@@ -14,7 +14,7 @@ internal record FilePath(string DirectoryPath, string FileName, string Extension
         return new FilePath(
             DirectoryPath: Path.GetDirectoryName(fullPath)!,
             FileName: Path.GetFileNameWithoutExtension(fullPath)!,
-            Extension: Path.GetExtension(fullPath)!
+            Extension: Path.GetExtension(fullPath).ToLower()!
         );
     }
 
