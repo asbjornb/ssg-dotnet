@@ -1,3 +1,4 @@
+using FluentAssertions;
 using Ssg_Dotnet.Files;
 
 namespace Ssg_Dotnet.Test.FileSystemReliantTests;
@@ -25,14 +26,11 @@ public class FilePathTests
     public void ShouldCreatePath()
     {
         var filePath = new FilePath(fullPath);
-        Assert.That(filePath, Is.Not.Null);
-        Assert.Multiple(() =>
-        {
-            Assert.That(filePath.FullPath, Does.EndWith(FileName));
-            Assert.That(filePath.DirectoryPath, Is.Not.Null);
-            Assert.That(filePath.FileName, Is.Not.Null);
-            Assert.That(filePath.Extension, Is.Not.Null);
-        });
+        filePath.Should().NotBeNull();
+        filePath.FullPath.Should().EndWith(FileName);
+        filePath.DirectoryPath.Should().NotBeNull();
+        filePath.FileName.Should().NotBeNull();
+        filePath.Extension.Should().NotBeNull();
     }
 
     [Test]
@@ -40,7 +38,7 @@ public class FilePathTests
     {
         var filePath = new FilePath(fullPath);
         var content = await filePath.ReadFile();
-        Assert.That(content, Is.Not.Null);
-        Assert.That(content.Content, Is.EqualTo(Content));
+        content.Should().NotBeNull();
+        content.Content.Should().Be(Content);
     }
 }

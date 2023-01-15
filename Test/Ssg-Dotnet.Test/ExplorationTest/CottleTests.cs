@@ -1,4 +1,5 @@
 using Cottle;
+using FluentAssertions;
 
 namespace Ssg_Dotnet.Test.ExplorationTest;
 
@@ -15,8 +16,8 @@ public class CottleTests
         {
             ["content"] = "<h1>Hello World</h1>"
         }));
-        Assert.That(result, Is.Not.Null);
-        Assert.That(result, Is.EqualTo("<main><h1>Hello World</h1></main>"));
+        result.Should().NotBeNull();
+        result.Should().Be("<main><h1>Hello World</h1></main>");
     }
 
     [Test]
@@ -30,7 +31,7 @@ public class CottleTests
             {
                 ["content"] = "<h1>Hello World</h1>"
             }));
-        Assert.That(result, Is.Not.Null);
-        Assert.That(result, Is.EqualTo("<main>\n        <h1>Hello World</h1>\n    </main>\n"));
+        result.Should().NotBeNull();
+        result.Should().Be("<main>\n        <h1>Hello World</h1>\n    </main>\n");
     }
 }

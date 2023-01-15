@@ -1,3 +1,4 @@
+using FluentAssertions;
 using Ssg_Dotnet.Files;
 
 namespace Ssg_Dotnet.Test.FileSystemReliantTests;
@@ -21,10 +22,10 @@ public class FileFinderTests
     public void ShouldFindAllFiles()
     {
         var files = FileFinder.FindFiles(FileSystemSetup.FolderName);
-        Assert.That(files.ToList(), Has.Count.EqualTo(FileSystemSetup.Files.Count));
+        files.Should().HaveCount(FileSystemSetup.Files.Count);
         foreach(var file in FileSystemSetup.Files)
         {
-            Assert.That(files.Select(x => x.FileName + x.Extension), Does.Contain(file));
+            files.Select(x => x.FileName + x.Extension).Should().Contain(file);
         }
     }
 
@@ -33,10 +34,10 @@ public class FileFinderTests
     {
         var files = FileFinder.FindFiles(FileSystemSetup.FolderName, "md");
         var expected = FileSystemSetup.Files.Where(x => x.EndsWith(".md")).ToList();
-        Assert.That(files.ToList(), Has.Count.EqualTo(expected.Count));
+        files.Should().HaveCount(expected.Count);
         foreach (var file in expected)
         {
-            Assert.That(files.Select(x => x.FileName + x.Extension), Does.Contain(file));
+            files.Select(x => x.FileName + x.Extension).Should().Contain(file);
         }
     }
 }
