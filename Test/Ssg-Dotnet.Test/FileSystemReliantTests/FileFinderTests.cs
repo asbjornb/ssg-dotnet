@@ -2,7 +2,7 @@ using Ssg_Dotnet.Files;
 
 namespace Ssg_Dotnet.Test.FileSystemReliantTests;
 
-[TestFixture, Parallelizable(ParallelScope.Self)]
+[TestFixture]
 public class FileFinderTests
 {
     [SetUp]

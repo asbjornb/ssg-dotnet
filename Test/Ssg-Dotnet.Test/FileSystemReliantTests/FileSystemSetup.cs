@@ -8,11 +8,23 @@ internal static class FileSystemSetup
     public static void CreateFiles()
     {
         //Create a few test files in folder "testFiles" for use in tests
-        Directory.CreateDirectory(FolderName);
+        if (!Directory.Exists(FolderName))
+        {
+            Directory.CreateDirectory(FolderName);
+        }
         foreach(var file in Files)
         {
             File.WriteAllText($"{FolderName}/{file}", "SomeText");
         }
+    }
+
+    public static void CreateFile(string fileName, string content)
+    {
+        if (!Directory.Exists(FolderName))
+        {
+            Directory.CreateDirectory(FolderName);
+        }
+        File.WriteAllText($"{FolderName}/{fileName}", content);
     }
 
     public static void CleanUp()
