@@ -3,9 +3,9 @@
 namespace Ssg_Dotnet.Test.ProcessorTests;
 internal class FileProcessorTests
 {
-    private const string InputFolder = "TestSamples";
+    private readonly string InputFolder = Path.Combine("TestSamples", "Content");
+    private readonly string LayoutFolder = Path.Combine("TestSamples", "Layouts");
     private const string OutputFolder = "TestOutput";
-    private readonly string LayoutFolder = Path.Combine(InputFolder, "Layouts");
 
     [Test]
     public async Task ShouldProcessFiles()

@@ -25,19 +25,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="TestSamples\Blog\post1.md">
+    <None Update="TestSamples\Content\Blog\post1.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestSamples\index.md">
+    <None Update="TestSamples\Content\index.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="TestSamples\Layouts\default.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestSamples\passthrough.html">
+    <None Update="TestSamples\Content\passthrough.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestSamples\now.md">
+    <None Update="TestSamples\Content\now.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
