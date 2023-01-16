@@ -34,7 +34,7 @@ internal static class FileProcessor
             }
             else
             {
-                FileHandler.CopyFile(file, outputFolder);
+                FileHandler.CopyFile(file, file.DirectoryPath.Replace(inputFolder, outputFolder));
             }
         }
     }
