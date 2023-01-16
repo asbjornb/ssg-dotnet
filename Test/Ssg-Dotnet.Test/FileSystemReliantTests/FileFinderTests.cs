@@ -2,27 +2,31 @@ using Ssg_Dotnet.Files;
 
 namespace Ssg_Dotnet.Test.FileSystemReliantTests;
 
-[TestFixture]
+[TestFixture, Parallelizable(ParallelScope.Self)]
 public class FileFinderTests
 {
+    private FileSystemHelper helper;
+    private readonly List<string> testFiles = new() { "testFile1.txt", "testFile2.md", "testFile3.json" };
+
     [SetUp]
-    public void SetUp()
+    public async Task SetUp()
     {
-        FileSystemSetup.CreateFiles();
+        helper = new FileSystemHelper();
+        await helper.CreateFiles(testFiles);
     }
 
     [TearDown]
     public void TearDown()
     {
-        FileSystemSetup.CleanUp();
+        helper.Dispose();
     }
 
     [Test]
     public void ShouldFindAllFiles()
     {
-        var files = FileFinder.FindFiles(FileSystemSetup.FolderName);
-        files.Should().HaveCount(FileSystemSetup.Files.Count);
-        foreach (var file in FileSystemSetup.Files)
+        var files = FileFinder.FindFiles(helper.FolderName);
+        files.Should().HaveCount(testFiles.Count);
+        foreach (var file in testFiles)
         {
             files.Select(x => x.FileName + x.Extension).Should().Contain(file);
         }
@@ -31,8 +35,8 @@ public class FileFinderTests
     [Test]
     public void ShouldFindFilesWithExtension()
     {
-        var files = FileFinder.FindFiles(FileSystemSetup.FolderName, "md");
-        var expected = FileSystemSetup.Files.Where(x => x.EndsWith(".md")).ToList();
+        var files = FileFinder.FindFiles(helper.FolderName, "md");
+        var expected = testFiles.Where(x => x.EndsWith(".md")).ToList();
         files.Should().HaveCount(expected.Count);
         foreach (var file in expected)
         {

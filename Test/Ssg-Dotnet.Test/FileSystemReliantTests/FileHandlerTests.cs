@@ -2,23 +2,26 @@ using Ssg_Dotnet.Files;
 
 namespace Ssg_Dotnet.Test.FileSystemReliantTests;
 
-[TestFixture]
+[TestFixture, Parallelizable(ParallelScope.Self)]
 public class FileHandlerTests
 {
     private const string FileName = "now.md";
     private const string Content = "Some content";
-    private readonly string fullPath = Path.Combine(FileSystemSetup.FolderName, FileName);
+    private FileSystemHelper helper;
+    private string fullPath;
 
     [SetUp]
-    public void SetUp()
+    public async Task SetUp()
     {
-        FileSystemSetup.CreateFile(FileName, Content);
+        helper = new FileSystemHelper();
+        await helper.CreateFileWithContent(FileName, Content);
+        fullPath = Path.Combine(helper.FolderName, FileName);
     }
 
     [TearDown]
     public void TearDown()
     {
-        FileSystemSetup.CleanUp();
+        helper.Dispose();
     }
 
     [Test]

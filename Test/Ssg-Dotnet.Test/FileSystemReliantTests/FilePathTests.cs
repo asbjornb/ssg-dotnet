@@ -5,16 +5,14 @@ namespace Ssg_Dotnet.Test.FileSystemReliantTests;
 [TestFixture]
 public class FilePathTests
 {
-    private const string FileName = "now.md";
-    private readonly string fullPath = Path.Combine(FileSystemSetup.FolderName, FileName);
-
     [Test]
     public void ShouldCreatePath()
     {
+        var fullPath = Path.Combine("TestSamples", "now.md");
         var filePath = FilePath.FromFullPath(fullPath);
         filePath.Should().NotBeNull();
         filePath.FullPath.Should().EndWith(fullPath);
-        filePath.DirectoryPath.Should().EndWith(FileSystemSetup.FolderName);
+        filePath.DirectoryPath.Should().EndWith("TestSamples");
         filePath.FileName.Should().Be("now");
         filePath.Extension.Should().Be(".md");
     }
