@@ -25,7 +25,16 @@ internal static class FileHandler
 
     public static void CopyFile(FilePath path, string destinationFolder)
     {
-        var destinationPath = Path.Combine(destinationFolder, path.FileName + path.Extension);
+        CopyFile(path, destinationFolder, path.FileName + path.Extension);
+    }
+
+    public static void CopyFile(FilePath path, string destinationFolder, string destinationFileName)
+    {
+        if (!Directory.Exists(destinationFolder))
+        {
+            Directory.CreateDirectory(destinationFolder);
+        }
+        var destinationPath = Path.Combine(destinationFolder, destinationFileName);
         File.Copy(path.FullPath, destinationPath);
     }
 
