@@ -13,13 +13,13 @@ internal class FileSystemHelper : IDisposable
     {
         foreach (var file in fileNames)
         {
-            await File.WriteAllTextAsync($"{FolderName}/{file}", "SomeText");
+            await File.WriteAllTextAsync(Path.Combine(FolderName,file), "SomeText");
         }
     }
 
     public async Task CreateFileWithContent(string fileName, string content)
     {
-        await File.WriteAllTextAsync($"{FolderName}/{fileName}", content);
+        await File.WriteAllTextAsync(Path.Combine(FolderName, fileName), content);
     }
 
     public void Dispose()
