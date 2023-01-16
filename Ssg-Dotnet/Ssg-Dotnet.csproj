@@ -17,6 +17,7 @@
   <ItemGroup>
     <PackageReference Include="Cottle" Version="2.0.8" />
     <PackageReference Include="Markdig" Version="0.30.4" />
+    <PackageReference Include="System.Collections" Version="4.3.0" />
   </ItemGroup>
 
 </Project>

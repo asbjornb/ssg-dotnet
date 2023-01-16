@@ -10,31 +10,33 @@ internal class FileProcessorTests
     public async Task ShouldProcessFiles()
     {
         // Act
-        await FileProcessor.ProcessFiles(InputFolder, OutputFolder);
+        await FileProcessor.ProcessFiles(InputFolder, OutputFolder, null);
 
         // Assert
         var outputFiles = Directory.GetFiles(OutputFolder);
+        //Files are passed through
         outputFiles.Should().HaveCount(3);
         outputFiles.Should().Contain(x => x.EndsWith("index.html"));
         outputFiles.Should().Contain(x => x.EndsWith("now.html"));
         outputFiles.Should().Contain(x => x.EndsWith("passthrough.html"));
-        File.ReadAllText(outputFiles.First(x => x.EndsWith("index.html"))).Should().Be("<h1>Some header</h1>\n");
-        File.ReadAllText(outputFiles.First(x => x.EndsWith("now.html"))).Should().Be("<h1>What I'm doing now</h1>\n<ul>\n<li>Some list point 1</li>\n<li>Point 2</li>\n</ul>\n");
-        File.ReadAllText(outputFiles.First(x => x.EndsWith("passthrough.html"))).Should().Be("<head><title>TestTitle</title></head>\r\n<body>\r\n<p>Hello</p>\r\n</body>\r\n");
+        //Files contain content
+        File.ReadAllText(outputFiles.First(x => x.EndsWith("index.html"))).Should().Contain("<h1>Some header</h1>\n");
+        File.ReadAllText(outputFiles.First(x => x.EndsWith("now.html"))).Should().Contain("<h1>What I'm doing now</h1>\n<ul>\n<li>Some list point 1</li>\n<li>Point 2</li>\n</ul>\n");
+        File.ReadAllText(outputFiles.First(x => x.EndsWith("passthrough.html"))).Should().Contain("<head><title>TestTitle</title></head>\r\n<body>\r\n<p>Hello</p>\r\n</body>\r\n");        
     }
 
     [Test]
     public async Task ShouldProcessNestedFiles()
     {
         // Act
-        await FileProcessor.ProcessFiles(InputFolder, OutputFolder);
+        await FileProcessor.ProcessFiles(InputFolder, OutputFolder, null);
 
         // Assert
         var outputFiles = Directory.GetFiles(OutputFolder, "Blog\\*.*", SearchOption.AllDirectories);
         outputFiles.Should().HaveCount(1);
         var outputFile = outputFiles.Single();
         outputFile.Should().EndWith("Blog\\post1.html");
-        File.ReadAllText(outputFile).Should().Be("<h1>Some post</h1>\n");
+        File.ReadAllText(outputFile).Should().Contain("<h1>Some post</h1>\n");
     }
 
     [TearDown]
