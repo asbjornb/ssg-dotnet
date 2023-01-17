@@ -1,4 +1,5 @@
 ﻿using Ssg_Dotnet.Processor;
+using Ssg_Dotnet.LayoutTemplating;
 using Ssg_Dotnet.Test.FileSystemReliantTests;
 
 namespace Ssg_Dotnet.Test.ProcessorTests;
@@ -8,11 +9,19 @@ internal class FileProcessorTests
     private readonly string LayoutFolder = Path.Combine("TestSamples", "Layouts");
     private const string OutputFolder = "TestOutput";
 
+    public FileProcessor sut;
+
+    [SetUp]
+    public void SetUp()
+    {
+        sut = new FileProcessor(new TemplateHandler());
+    }
+
     [Test]
     public async Task ShouldProcessFiles()
     {
         // Act
-        await FileProcessor.ProcessFiles(InputFolder, OutputFolder, LayoutFolder);
+        await sut.ProcessFiles(InputFolder, OutputFolder, LayoutFolder);
 
         // Assert
         var outputFiles = Directory.GetFiles(OutputFolder);
@@ -32,7 +41,7 @@ internal class FileProcessorTests
     public async Task ShouldProcessNestedFiles()
     {
         // Act
-        await FileProcessor.ProcessFiles(InputFolder, OutputFolder, LayoutFolder);
+        await sut.ProcessFiles(InputFolder, OutputFolder, LayoutFolder);
 
         // Assert
         var outputFiles = Directory.GetFiles(OutputFolder, "Blog\\*.*", SearchOption.AllDirectories);
@@ -53,7 +62,7 @@ internal class FileProcessorTests
         await inputHelper.CreateFileWithContent("index.md", "# Some header");
 
         // Act
-        await FileProcessor.ProcessFiles(inputHelper.FolderName, OutputFolder, layoutHelper.FolderName);
+        await sut.ProcessFiles(inputHelper.FolderName, OutputFolder, layoutHelper.FolderName);
 
         // Assert
         var outputFiles = Directory.GetFiles(OutputFolder, "*.*", SearchOption.AllDirectories);
