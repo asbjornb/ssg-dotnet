@@ -1,3 +1,4 @@
+using NUnit.Framework.Internal;
 using Ssg_Dotnet.Files;
 
 namespace Ssg_Dotnet.Test.FileSystemReliantTests;
@@ -34,5 +35,34 @@ public class InputFileHandlerTests
 
         //Assert
         content.Should().Be(Content);
+    }
+
+    [Test]
+    public async Task ShouldFindAllFiles()
+    {
+        var testFiles = new List<string>() { "testFile1.txt", "testFile2.md", "testFile3.json" };
+        await helper.CreateFiles(testFiles);
+
+        var files = sut.FindFiles();
+        files.Should().HaveCount(testFiles.Count);
+        foreach (var file in testFiles)
+        {
+            files.Should().Contain(file);
+        }
+    }
+
+    [Test]
+    public async Task ShouldFindFilesWithExtension()
+    {
+        var testFiles = new List<string>() { "testFile1.txt", "testFile2.md", "testFile3.json" };
+        await helper.CreateFiles(testFiles);
+
+        var files = sut.FindFiles("md");
+        var expected = testFiles.Where(x => x.EndsWith(".md")).ToList();
+        files.Should().HaveCount(expected.Count);
+        foreach (var file in expected)
+        {
+            files.Should().Contain(file);
+        }
     }
 }
