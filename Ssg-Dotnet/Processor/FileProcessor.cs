@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Markdig;
 using Ssg_Dotnet.Files;
 using Ssg_Dotnet.LayoutTemplating;
@@ -24,15 +22,15 @@ internal class FileProcessor
 
         foreach (var file in inputFileHandler.FindFiles())
         {
-            var extension = Path.GetExtension(file);
-            if (extension == ".md")
+            var filePath = FilePath.FromString(file);
+            if (filePath.Extension == ".md")
             {
                 var input = await inputFileHandler.ReadFileAsync(file);
                 var content = Markdown.ToHtml(input);
                 //switch extention to .html for outputFile:
-                var outputFile = Path.ChangeExtension(file, ".html");
-                var output = templateHandler.Render("default", Path.GetFileNameWithoutExtension(file), content);
-                await outputFileHandler.WriteFileAsync(outputFile, output);
+                var outputFile = filePath with { Extension = ".html" };
+                var output = templateHandler.Render("default", filePath.FileName, content);
+                await outputFileHandler.WriteFileAsync(outputFile.RelativePath, output);
             }
             else
             {

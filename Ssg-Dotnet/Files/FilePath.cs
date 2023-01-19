@@ -4,7 +4,7 @@ namespace Ssg_Dotnet.Files;
 
 internal record FilePath(string DirectoryPath, string FileName, string Extension)
 {
-    public static FilePath FromFullPath(string fullPath)
+    public static FilePath FromString(string fullPath)
     {
         return new FilePath(
             DirectoryPath: Path.GetDirectoryName(fullPath)!,
@@ -15,5 +15,5 @@ internal record FilePath(string DirectoryPath, string FileName, string Extension
 
     public string FileNameWithExtension => FileName + Extension;
 
-    public string FullPath => Path.Combine(DirectoryPath, FileNameWithExtension);
+    public string RelativePath => Path.Combine(DirectoryPath, FileNameWithExtension);
 }

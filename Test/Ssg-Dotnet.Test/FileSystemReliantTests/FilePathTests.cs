@@ -9,9 +9,9 @@ public class FilePathTests
     public void ShouldCreatePath()
     {
         var fullPath = Path.Combine("TestSamples", "now.md");
-        var filePath = FilePath.FromFullPath(fullPath);
+        var filePath = FilePath.FromString(fullPath);
         filePath.Should().NotBeNull();
-        filePath.FullPath.Should().EndWith(fullPath);
+        filePath.RelativePath.Should().EndWith(fullPath);
         filePath.DirectoryPath.Should().EndWith("TestSamples");
         filePath.FileName.Should().Be("now");
         filePath.Extension.Should().Be(".md");
