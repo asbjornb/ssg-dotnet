@@ -19,28 +19,24 @@ internal class FileProcessor
     public async Task ProcessFiles(string inputFolder, string outputFolder, string? layoutfolder)
     {
         await templateHandler.PrepareLayouts(layoutfolder);
-        if (!Directory.Exists(inputFolder))
+        var inputFileHandler = new InputFileHandler(inputFolder);
+        var outputFileHandler = new OutputFileHandler(inputFolder, outputFolder);
+
+        foreach (var file in inputFileHandler.FindFiles())
         {
-            throw new ArgumentException("inputFolder doesn't exist");
-        }
-        if (!Directory.Exists(outputFolder))
-        {
-            Directory.CreateDirectory(outputFolder);
-        }
-        foreach (var file in FileFinder.FindFiles(inputFolder))
-        {
-            if (file.Extension == ".md")
+            var extension = Path.GetExtension(file);
+            if (extension == ".md")
             {
-                var input = await FileHandler.ReadFileAsync(file);
+                var input = await inputFileHandler.ReadFileAsync(file);
                 var content = Markdown.ToHtml(input);
-                var outputDirectory = file.DirectoryPath.Replace(inputFolder, outputFolder);
-                var outputFile = file! with { DirectoryPath = outputDirectory, Extension = ".html" };
-                var output = templateHandler.Render("default", file.FileName, content);
-                await FileHandler.WriteFileAsync(outputFile, output);
+                //switch extention to .html for outputFile:
+                var outputFile = Path.ChangeExtension(file, ".html");
+                var output = templateHandler.Render("default", Path.GetFileNameWithoutExtension(file), content);
+                await outputFileHandler.WriteFileAsync(outputFile, output);
             }
             else
             {
-                FileHandler.CopyFile(file, file.DirectoryPath.Replace(inputFolder, outputFolder));
+                outputFileHandler.CopyFile(file);
             }
         }
     }
