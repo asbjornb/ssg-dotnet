@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Cottle;
@@ -15,16 +14,14 @@ internal class TemplateHandler
     {
         if (layoutfolder != null)
         {
-            if (!Directory.Exists(layoutfolder))
-            {
-                throw new ArgumentException("layoutfolder doesn't exist");
-            }
+            var layoutReader = new InputFileHandler(layoutfolder);
             //Use cottle to set up layout
-            foreach (var file in FileFinder.FindFiles(layoutfolder, ".html"))
+            foreach (var file in layoutReader.FindFiles(".html"))
             {
-                var template = await FileHandler.ReadFileAsync(file);
+                var template = await layoutReader.ReadFileAsync(file);
                 var document = GetDocumentTrimNothing(template);
-                templates.Add(file.FileName, document);
+                var name = Path.GetFileNameWithoutExtension(file);
+                templates.Add(name, document);
             }
         }
         else
@@ -39,7 +36,14 @@ internal class TemplateHandler
 
     public string Render(string templateName, string title, string content)
     {
-        return templates[templateName].Render(Context.CreateBuiltin(new Dictionary<Value, Value>
+        //Should be changed eventually to match in priority order original file name, original folder name or any x-parent folder.
+        var template = templates[templateName];
+        return RenderTemplate(template, title, content);
+    }
+
+    private string RenderTemplate(IDocument template, string title, string content)
+    {
+        return template.Render(Context.CreateBuiltin(new Dictionary<Value, Value>
         {
             ["content"] = content,
             ["title"] = title
