@@ -22,7 +22,7 @@ internal class FileProcessor
         inputHandler = new InputFileHandler(config.InputFolder);
         outputHandler = new OutputFileHandler(config.InputFolder, config.OutputFolder);
         notesInputHandler = new InputFileHandler(config.NoteFolder);
-        notesOutputHandler = new OutputFileHandler(config.NoteFolder, Path.Combine(config.OutputFolder, "notes"));
+        notesOutputHandler = new OutputFileHandler(config.NoteFolder, Path.Combine(config.OutputFolder, "Notes"));
         contentTemplateHandler = new TemplateHandler(config.ContentTemplatePath);
         noteTemplateHandler = new TemplateHandler(config.NoteTemplatePath);
     }

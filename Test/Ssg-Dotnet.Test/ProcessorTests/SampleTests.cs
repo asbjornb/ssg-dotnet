@@ -8,29 +8,28 @@ namespace Ssg_Dotnet.Test.ProcessorTests;
 internal class SampleTests
 {
     private readonly string inputFolder = Path.Combine("TestSamples", "Content");
-    private readonly string templatePath = Path.Combine("TestSamples", "Layouts", "default.Html");
+    private readonly string contentTemplatePath = Path.Combine("TestSamples", "Layouts", "default.Html");
+    private readonly string notesFolder = Path.Combine("TestSamples", "Notes");
+    private readonly string noteTemplatePath = Path.Combine("TestSamples", "Layouts", "note.Html");
     private const string OutputFolder = "TestOutput";
-
-    private FileSystemHelper notesHelper;
     private FileProcessor sut;
 
     [SetUp]
     public void SetUp()
     {
-        notesHelper = new FileSystemHelper(); //Empty notes folder for now in sample
-        var config = new ConfigRecord(inputFolder, OutputFolder, notesHelper.FolderName, templatePath, templatePath);
+        var config = new ConfigRecord(inputFolder, OutputFolder, notesFolder, contentTemplatePath, noteTemplatePath);
         sut = new FileProcessor(config);
     }
 
     [Test]
-    public async Task ShouldProcessFiles()
+    public async Task ShouldProcessContentFiles()
     {
         // Act
         await sut.ProcessFiles();
 
         // Assert
         // Find output from unnested files
-        var outputFiles = Directory.GetFiles(OutputFolder, "*.*", SearchOption.AllDirectories).Where(x => !x.Contains("Blog"));
+        var outputFiles = Directory.GetFiles(OutputFolder, "*.*", SearchOption.AllDirectories).Where(x => !x.Contains("Blog") && !x.Contains("Notes"));
 
         outputFiles.Should().HaveCount(3);
         var expected1 = Path.Combine(OutputFolder, "index.html"); //No layering since it's already called index
@@ -65,6 +64,5 @@ internal class SampleTests
         {
             Directory.Delete(OutputFolder, true);
         }
-        notesHelper.Dispose();
     }
 }
