@@ -28,7 +28,7 @@ internal class FileProcessor
                 var input = await inputFileHandler.ReadFileAsync(file);
                 var content = Markdown.ToHtml(input);
                 //switch extention to .html for outputFile:
-                var outputFile = filePath with { Extension = ".html" };
+                var outputFile = filePath.ToIndexHtml();
                 var output = templateHandler.Render("default", filePath.FileName, content);
                 await outputFileHandler.WriteFileAsync(outputFile.RelativePath, output);
             }

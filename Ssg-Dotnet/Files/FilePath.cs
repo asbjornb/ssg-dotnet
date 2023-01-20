@@ -16,4 +16,13 @@ internal record FilePath(string DirectoryPath, string FileName, string Extension
     public string FileNameWithExtension => FileName + Extension;
 
     public string RelativePath => Path.Combine(DirectoryPath, FileNameWithExtension);
+
+    public FilePath ToIndexHtml()
+    {
+        if (FileName == "index")
+        {
+            return this with { Extension = ".html" };
+        }
+        return new(DirectoryPath: Path.Combine(DirectoryPath, FileName), FileName: "index", Extension: ".html");
+    }
 }
