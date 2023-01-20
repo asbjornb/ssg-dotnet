@@ -74,6 +74,35 @@ internal class FileProcessorTests
         File.ReadAllText(outputFile).Should().Be("<html><head><title>TestTitle</title></head><body><h1>Some header</h1>\n</body></html>");
     }
 
+    [Test]
+    public async Task ShouldProcessNotes()
+    {
+        //Arrange
+        using var layoutHelper = new FileSystemHelper();
+        await layoutHelper.CreateFileWithContent("default.html", "{content},{backlinks}");
+
+        using var inputHelper = new FileSystemHelper();
+
+        using var notesHelper = new FileSystemHelper();
+        await notesHelper.CreateFileWithContent("note1.md", "# Some header");
+        await notesHelper.CreateFileWithContent("note2.md", "# Some header 2\n\n[note1](note1.md)");
+
+        // Act
+        await sut.ProcessFiles(inputHelper.FolderName, OutputFolder, notesHelper.FolderName, layoutHelper.FolderName);
+
+        // Assert
+        var outputFiles = Directory.GetFiles(OutputFolder, "*.*", SearchOption.AllDirectories);
+        outputFiles.Should().HaveCount(2);
+        
+        var expected1 = Path.Combine("note1", "index.html");
+        var expected2 = Path.Combine("note2", "index.html");
+        outputFiles.Should().Contain(x => x.EndsWith(expected1));
+        outputFiles.Should().Contain(x => x.EndsWith(expected2));
+        //Files contain content
+        File.ReadAllText(outputFiles.First(x => x.EndsWith(expected1))).Should().Be("<h1>Some header</h1>\n,");
+        File.ReadAllText(outputFiles.First(x => x.EndsWith(expected2))).Should().Be("<h1>Some header 2</h1>\n<p><a href=\"note1.md\">note1</a></p>\n,");
+    }
+
     [TearDown]
     public void TearDown()
     {
