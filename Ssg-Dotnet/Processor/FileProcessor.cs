@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Markdig;
+using Ssg_Dotnet.Config;
 using Ssg_Dotnet.Files;
 using Ssg_Dotnet.LayoutTemplating;
 
@@ -9,28 +10,30 @@ namespace Ssg_Dotnet.Processor;
 
 internal class FileProcessor
 {
-    private readonly TemplateHandler templateHandler;
+    private readonly InputFileHandler inputHandler;
+    private readonly OutputFileHandler outputHandler;
+    private readonly InputFileHandler notesInputHandler;
+    private readonly OutputFileHandler notesOutputHandler;
+    private readonly TemplateHandler contentTemplateHandler;
+    private readonly TemplateHandler noteTemplateHandler;
 
-    public FileProcessor(TemplateHandler templateHandler)
+    public FileProcessor(IConfig config)
     {
-        this.templateHandler = templateHandler;
+        inputHandler = new InputFileHandler(config.InputFolder);
+        outputHandler = new OutputFileHandler(config.InputFolder, config.OutputFolder);
+        notesInputHandler = new InputFileHandler(config.NoteFolder);
+        notesOutputHandler = new OutputFileHandler(config.NoteFolder, Path.Combine(config.OutputFolder, "notes"));
+        contentTemplateHandler = new TemplateHandler(config.ContentTemplatePath);
+        noteTemplateHandler = new TemplateHandler(config.NoteTemplatePath);
     }
 
-    public async Task ProcessFiles(string inputFolder, string outputFolder, string? notesFolder, string? layoutfolder)
+    public async Task ProcessFiles()
     {
-        await templateHandler.PrepareLayouts(layoutfolder);
-        var inputFileHandler = new InputFileHandler(inputFolder);
-        var outputFileHandler = new OutputFileHandler(inputFolder, outputFolder);
-        await ProcessFolder(inputFileHandler, outputFileHandler, isNote: false);
-        if (notesFolder != null)
-        {
-            var notesFileHandler = new InputFileHandler(notesFolder);
-            var notesOutputHandler = new OutputFileHandler(notesFolder, Path.Combine(outputFolder, "notes"));
-            await ProcessFolder(notesFileHandler, notesOutputHandler, isNote: true);
-        }
+        await ProcessFolder(inputHandler, outputHandler, contentTemplateHandler, new Dictionary<string, string>());
+        await ProcessFolder(notesInputHandler, notesOutputHandler, noteTemplateHandler, new Dictionary<string, string>());
     }
 
-    private async Task ProcessFolder(InputFileHandler inputHandler, OutputFileHandler outputHandler, bool isNote)
+    private static async Task ProcessFolder(InputFileHandler inputHandler, OutputFileHandler outputHandler, TemplateHandler templateHandler, Dictionary<string, string> context)
     {
         foreach (var file in inputHandler.FindFiles())
         {
@@ -41,15 +44,8 @@ internal class FileProcessor
                 var content = Markdown.ToHtml(input);
                 //switch extention to .html for outputFile:
                 var outputFile = filePath.ToIndexHtml();
-                string output;
-                if (isNote)
-                {
-                    output = templateHandler.RenderNote("default", filePath.FileName, content, new List<string>());
-                }
-                else
-                {
-                    output = templateHandler.Render("default", filePath.FileName, content);
-                }
+                var cottleValues = new Dictionary<string, string>(context) { { "content", content } };
+                var output = await templateHandler.RenderAsync(cottleValues);
                 await outputHandler.WriteFileAsync(outputFile.RelativePath, output);
             }
             else

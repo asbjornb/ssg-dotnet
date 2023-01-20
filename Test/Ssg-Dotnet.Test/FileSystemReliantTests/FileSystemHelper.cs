@@ -13,7 +13,7 @@ internal class FileSystemHelper : IDisposable
     {
         foreach (var file in fileNames)
         {
-            await File.WriteAllTextAsync(Path.Combine(FolderName,file), "SomeText");
+            await File.WriteAllTextAsync(Path.Combine(FolderName, file), "SomeText");
         }
     }
 
