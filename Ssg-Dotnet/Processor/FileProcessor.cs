@@ -14,7 +14,7 @@ internal class FileProcessor
         this.templateHandler = templateHandler;
     }
 
-    public async Task ProcessFiles(string inputFolder, string outputFolder, string? layoutfolder)
+    public async Task ProcessFiles(string inputFolder, string outputFolder, string? notesFolder, string? layoutfolder)
     {
         await templateHandler.PrepareLayouts(layoutfolder);
         var inputFileHandler = new InputFileHandler(inputFolder);

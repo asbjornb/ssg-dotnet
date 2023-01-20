@@ -21,7 +21,7 @@ internal class FileProcessorTests
     public async Task ShouldProcessFiles()
     {
         // Act
-        await sut.ProcessFiles(InputFolder, OutputFolder, LayoutFolder);
+        await sut.ProcessFiles(InputFolder, OutputFolder, null, LayoutFolder);
 
         // Assert
         // Find output from unnested files
@@ -43,7 +43,7 @@ internal class FileProcessorTests
     public async Task ShouldProcessNestedFiles()
     {
         // Act
-        await sut.ProcessFiles(InputFolder, OutputFolder, LayoutFolder);
+        await sut.ProcessFiles(InputFolder, OutputFolder, null, LayoutFolder);
 
         // Assert
         var outputFiles = Directory.GetFiles(OutputFolder, Path.Combine("Blog", "*.*"), SearchOption.AllDirectories);
@@ -64,7 +64,7 @@ internal class FileProcessorTests
         await inputHelper.CreateFileWithContent("index.md", "# Some header");
 
         // Act
-        await sut.ProcessFiles(inputHelper.FolderName, OutputFolder, layoutHelper.FolderName);
+        await sut.ProcessFiles(inputHelper.FolderName, OutputFolder, null, layoutHelper.FolderName);
 
         // Assert
         var outputFiles = Directory.GetFiles(OutputFolder, "*.*", SearchOption.AllDirectories);
