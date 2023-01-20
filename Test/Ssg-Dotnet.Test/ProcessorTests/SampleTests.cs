@@ -65,4 +65,24 @@ internal class SampleTests
             Directory.Delete(OutputFolder, true);
         }
     }
+
+    [Test]
+    public async Task ShouldProcessNoteFiles()
+    {
+        // Act
+        await sut.ProcessFiles();
+
+        // Assert
+        // Find output from unnested files
+        var outputFiles = Directory.GetFiles(OutputFolder, "*.*", SearchOption.AllDirectories).Where(x => x.Contains("Notes"));
+
+        outputFiles.Should().HaveCount(2);
+        var expected1 = Path.Combine("Notes", "git", "index.html");
+        var expected2 = Path.Combine("Notes", "work-tools", "index.html");
+        outputFiles.Should().Contain(x => x.EndsWith(expected1));
+        outputFiles.Should().Contain(x => x.EndsWith(expected2));
+        //Files contain content
+        File.ReadAllText(outputFiles.First(x => x.EndsWith(expected1))).Should().Be("<h1>Git</h1>\n<p>Popular version control tool</p>\n, ");
+        File.ReadAllText(outputFiles.First(x => x.EndsWith(expected2))).Should().Be("<h1>Work tools</h1>\n<p>Some work tools include:</p>\n<ul>\n<li>[[git]]</li>\n<li>Ssdt</li>\n</ul>\n, ");
+    }
 }
