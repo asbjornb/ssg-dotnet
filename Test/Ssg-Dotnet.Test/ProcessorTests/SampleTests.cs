@@ -82,7 +82,7 @@ internal class SampleTests
         outputFiles.Should().Contain(x => x.EndsWith(expected1));
         outputFiles.Should().Contain(x => x.EndsWith(expected2));
         //Files contain content
-        File.ReadAllText(outputFiles.First(x => x.EndsWith(expected1))).Should().Be("<h1>Git</h1>\n<p>Popular version control tool</p>\n, ");
+        File.ReadAllText(outputFiles.First(x => x.EndsWith(expected1))).Should().Be("<h1>Git</h1>\n<p>Popular version control tool. See more here <a href=\"https://git-scm.com/\">git</a></p>\n, ");
         File.ReadAllText(outputFiles.First(x => x.EndsWith(expected2))).Should().Be("<h1>Work tools</h1>\n<p>Some work tools include:</p>\n<ul>\n<li>[[git]]</li>\n<li>Ssdt</li>\n</ul>\n, ");
     }
 }
