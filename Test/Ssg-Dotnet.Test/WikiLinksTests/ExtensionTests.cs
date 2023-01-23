@@ -23,6 +23,20 @@ internal class ExtensionTests
         result.Should().Be(expectedHtml);
     }
 
+    //Test again for extension method for building the pipeline
+    [Test]
+    [TestCase("Ab [[SomeLink]] ba", "<p>Ab <a href=\"SomeLink\">SomeLink</a> ba</p>\n")]
+    [TestCase("Ab [[SomeLink]]", "<p>Ab <a href=\"SomeLink\">SomeLink</a></p>\n")] //EndOfLine
+    [TestCase("Ab [[special-characters_12]] ba", "<p>Ab <a href=\"special-characters_12\">special-characters_12</a> ba</p>\n")] //Special characters
+    [TestCase("A[b [[SomeLink]] [ ba", "<p>A[b <a href=\"SomeLink\">SomeLink</a> [ ba</p>\n")] //Urelated brackets
+    public void ShouldParseSimpleWikilinkWhenUsedAsPipelineExtension(string markdownContent, string expectedHtml)
+    {
+        var pipeline = new MarkdownPipelineBuilder().UseWikiLinks().Build();
+
+        var result = Markdown.ToHtml(markdownContent, pipeline);
+        result.Should().Be(expectedHtml);
+    }
+
     //Test that we can parse a standard link
     [Test]
     public void ShouldParseSimpleLink()
