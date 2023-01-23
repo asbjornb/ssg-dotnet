@@ -9,6 +9,9 @@ internal class ExtensionTests
     //Test that the extension can parse a simple wikilink
     [Test]
     [TestCase("Ab [[SomeLink]] ba", "<p>Ab <a href=\"SomeLink\">SomeLink</a> ba</p>\n")]
+    [TestCase("Ab [[SomeLink]]", "<p>Ab <a href=\"SomeLink\">SomeLink</a></p>\n")] //EndOfLine
+    [TestCase("Ab [[special-characters_12]] ba", "<p>Ab <a href=\"special-characters_12\">special-characters_12</a> ba</p>\n")] //Special characters
+    [TestCase("A[b [[SomeLink]] [ ba", "<p>A[b <a href=\"SomeLink\">SomeLink</a> [ ba</p>\n")] //Urelated brackets
     public void ShouldParseSimpleWikilink(string markdownContent, string expectedHtml)
     {
         var pipelineBuiler = new MarkdownPipelineBuilder();
