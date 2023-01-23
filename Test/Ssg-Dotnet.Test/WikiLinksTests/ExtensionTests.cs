@@ -1,24 +1,23 @@
 using Markdig;
 using Ssg_Dotnet.WikiLinks;
 
-namespace Ssg_Dotnet.Test.ExplorationTest.MarkdigExtensionTests;
+namespace Ssg_Dotnet.Test.WikiLinksTests;
 
 [TestFixture, Parallelizable(ParallelScope.Self)]
 internal class ExtensionTests
 {
     //Test that the extension can parse a simple wikilink
     [Test]
-    public void ShouldParseSimpleWikilink()
+    [TestCase("Ab [[SomeLink]] ba", "<p>Ab <a href=\"SomeLink\">SomeLink</a> ba</p>\n")]
+    public void ShouldParseSimpleWikilink(string markdownContent, string expectedHtml)
     {
-        const string markdownContent = "Ab [[SomeLink]] ba";
         var pipelineBuiler = new MarkdownPipelineBuilder();
         var extension = new WikilinkExtension();
         extension.Setup(pipelineBuiler);
         var pipeline = pipelineBuiler.Build();
 
         var result = Markdown.ToHtml(markdownContent, pipeline);
-        result.Should().NotBeNull();
-        result.Should().Be("<p>Ab <a href=\"SomeLink\">SomeLink</a> ba</p>\n");
+        result.Should().Be(expectedHtml);
     }
 
     //Test that we can parse a standard link
