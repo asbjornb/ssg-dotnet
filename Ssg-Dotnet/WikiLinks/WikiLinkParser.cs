@@ -1,7 +1,5 @@
 ﻿using Markdig.Helpers;
 using Markdig.Parsers;
-using Markdig.Syntax;
-using Markdig.Syntax.Inlines;
 
 namespace Ssg_Dotnet.WikiLinks;
 
@@ -45,25 +43,8 @@ internal class WikiLinkParser : InlineParser
 
         var linkTitle = slice.Text[titleStart..titleEnd];
 
-        var link = new LinkInline(linkTitle, "")  //We don't want title. Blank is ignored and won't produce the tag
-        {
-            Span = new SourceSpan(start, slice.Start),
-            Line = line,
-            Column = column,
-            IsClosed = true
-        };
-
-        link.AppendChild(new LiteralInline()
-        {
-            Span = link.Span,
-            Line = line,
-            Column = column,
-            Content = new StringSlice(linkTitle),
-            IsClosed = true
-        });
-
-        // Add the link to the current inline container
-        processor.Inline = link;
+        //Pass the link back to the processor
+        processor.Inline = WikiLink.Create(linkTitle, start, slice.Start, line, column);
         return true;
     }
 }
