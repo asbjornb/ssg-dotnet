@@ -30,6 +30,16 @@ internal class TemplateHandler
         return template!.Render(context);
     }
 
+    public async Task<string> RenderAsync(Dictionary<Value, Value> content)
+    {
+        if (template == null)
+        {
+            await PrepareLayout();
+        }
+        var context = Context.CreateBuiltin(content);
+        return template!.Render(context);
+    }
+
     private async Task PrepareLayout()
     {
         var fileContent = await File.ReadAllTextAsync(templatePath);
