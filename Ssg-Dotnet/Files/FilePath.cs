@@ -4,18 +4,18 @@ namespace Ssg_Dotnet.Files;
 
 internal record FilePath(string DirectoryPath, string FileName, string Extension)
 {
-    public static FilePath FromString(string fullPath)
+    public static FilePath FromString(string relativePath)
     {
         return new FilePath(
-            DirectoryPath: Path.GetDirectoryName(fullPath)!,
-            FileName: Path.GetFileNameWithoutExtension(fullPath)!,
-            Extension: Path.GetExtension(fullPath).ToLower()!
+            DirectoryPath: Path.GetDirectoryName(relativePath)!,
+            FileName: Path.GetFileNameWithoutExtension(relativePath)!,
+            Extension: Path.GetExtension(relativePath).ToLower()!
         );
     }
 
     public string FileNameWithExtension => FileName + Extension;
-
     public string RelativePath => Path.Combine(DirectoryPath, FileNameWithExtension);
+    public string RelativeUrl => Path.Combine(DirectoryPath, FileName);
 
     public FilePath ToIndexHtml()
     {
