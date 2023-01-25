@@ -1,1 +1,21 @@
-﻿{content}, {backlinks}
+﻿<!DOCTYPE html>
+<html lang="en">
+<body>
+    <main>
+        {content}
+    </main>
+    <hr>
+    <p class="backlinks-title larger">Backlinks</p>
+    {if(len(backlinks)>0):
+    <ul class="backlinks-container">
+        {for link in backlinks:
+        <li class="backlink">
+            <a href="{link.Url}" class="backlink__link">{link.Title}</a>
+        </li>
+        }
+    </ul>
+    |else:
+    <p class="backlinks-default">No backlinks found.</p>
+    }
+</body>
+</html>

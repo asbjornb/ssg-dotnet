@@ -107,7 +107,8 @@ internal class FileProcessor
             var note = filePath.RelativeUrl;
             notes.Add(note);
             var input = await notesInputHandler.ReadFileAsync(file);
-            var content = Markdown.Parse(input);
+            var pipeline = new MarkdownPipelineBuilder().UseWikiLinks().Build();
+            var content = Markdown.Parse(input, pipeline);
             foreach (var link in content.Descendants().OfType<WikiLink>())
             {
                 var target = link.Url!;

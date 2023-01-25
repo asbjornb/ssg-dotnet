@@ -82,7 +82,9 @@ internal class SampleTests
         outputFiles.Should().Contain(x => x.EndsWith(expected1));
         outputFiles.Should().Contain(x => x.EndsWith(expected2));
         //Files contain content
-        File.ReadAllText(outputFiles.First(x => x.EndsWith(expected1))).Should().Be("<h1>Git</h1>\n<p>Popular version control tool. See more here <a href=\"https://git-scm.com/\">git</a></p>\n, ");
-        File.ReadAllText(outputFiles.First(x => x.EndsWith(expected2))).Should().Be("<h1>Work tools</h1>\n<p>Some work tools include:</p>\n<ul>\n<li>[[git]]</li>\n<li>Ssdt</li>\n</ul>\n, ");
+        File.ReadAllText(outputFiles.First(x => x.EndsWith(expected1))).Should().Contain("<h1>Git</h1>\n<p>Popular version control tool. See more here <a href=\"https://git-scm.com/\">git</a></p>");
+        File.ReadAllText(outputFiles.First(x => x.EndsWith(expected1))).Should().Contain("<a href=\"work-tools\" class=\"backlink__link\">work-tools</a>");
+        File.ReadAllText(outputFiles.First(x => x.EndsWith(expected2))).Should().Contain("<h1>Work tools</h1>\n<p>Some work tools include:</p>\n<ul>\n<li>[[git]]</li>\n<li>Ssdt</li>\n</ul>");
+        File.ReadAllText(outputFiles.First(x => x.EndsWith(expected2))).Should().Contain("<p class=\"backlinks-default\">No backlinks found.</p>");
     }
 }
