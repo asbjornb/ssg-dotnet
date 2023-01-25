@@ -25,30 +25,34 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="TestSamples\Content\Blog\post1.md">
+    <None Update="TestSamples\Input\Content\Blog\post1.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestSamples\Content\index.md">
+    <None Update="TestSamples\Input\Content\index.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestSamples\Layouts\note.html">
+    <None Update="TestSamples\Input\Layouts\note.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestSamples\Layouts\default.html">
+    <None Update="TestSamples\Input\Layouts\default.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestSamples\Content\passthrough.html">
+    <None Update="TestSamples\Input\Content\passthrough.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestSamples\Content\now.md">
+    <None Update="TestSamples\Input\Content\now.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestSamples\Notes\work-tools.md">
+    <None Update="TestSamples\Input\Notes\work-tools.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestSamples\Notes\git.md">
+    <None Update="TestSamples\Input\Notes\git.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="TestSamples\Expected\" />
   </ItemGroup>
 
 </Project>

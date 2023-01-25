@@ -7,10 +7,10 @@ namespace Ssg_Dotnet.Test.ProcessorTests;
 [TestFixture, Parallelizable(ParallelScope.Self)]
 internal class SampleTests
 {
-    private readonly string inputFolder = Path.Combine("TestSamples", "Content");
-    private readonly string contentTemplatePath = Path.Combine("TestSamples", "Layouts", "default.Html");
-    private readonly string notesFolder = Path.Combine("TestSamples", "Notes");
-    private readonly string noteTemplatePath = Path.Combine("TestSamples", "Layouts", "note.Html");
+    private readonly string inputFolder = Path.Combine("TestSamples", "Input", "Content");
+    private readonly string contentTemplatePath = Path.Combine("TestSamples", "Input", "Layouts", "default.Html");
+    private readonly string notesFolder = Path.Combine("TestSamples", "Input", "Notes");
+    private readonly string noteTemplatePath = Path.Combine("TestSamples", "Input", "Layouts", "note.Html");
     private const string OutputFolder = "TestOutput";
     private FileProcessor sut;
 
