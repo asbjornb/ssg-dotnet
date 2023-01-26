@@ -1,6 +1,5 @@
 ﻿using Ssg_Dotnet.Config;
 using Ssg_Dotnet.Processor;
-using Ssg_Dotnet.Test.FileSystemReliantTests;
 
 namespace Ssg_Dotnet.Test.ProcessorTests;
 
@@ -21,42 +20,6 @@ internal class SampleTests
         sut = new FileProcessor(config);
     }
 
-    [Test]
-    public async Task ShouldProcessContentFiles()
-    {
-        // Act
-        await sut.ProcessFiles();
-
-        // Assert
-        // Find output from unnested files
-        var outputFiles = Directory.GetFiles(OutputFolder, "*.*", SearchOption.AllDirectories).Where(x => !x.Contains("Blog") && !x.Contains("Notes"));
-
-        outputFiles.Should().HaveCount(3);
-        var expected1 = Path.Combine(OutputFolder, "index.html"); //No layering since it's already called index
-        var expected2 = Path.Combine("now", "index.html"); //Expected to layer into now folder as index.html
-        outputFiles.Should().Contain(expected1);
-        outputFiles.Should().Contain(x => x.EndsWith(expected2));
-        outputFiles.Should().Contain(x => x.EndsWith("passthrough.html")); //No layering since it's already an html file
-        //Files contain content
-        File.ReadAllText(expected1).Should().Be("<h1>Some header</h1>\n");
-        File.ReadAllText(outputFiles.First(x => x.EndsWith(expected2))).Should().Be("<h1>What I'm doing now</h1>\n<ul>\n<li>Some list point 1</li>\n<li>Point 2</li>\n</ul>\n");
-        File.ReadAllText(outputFiles.First(x => x.EndsWith("passthrough.html"))).Should().Be("<head><title>TestTitle</title></head>\r\n<body>\r\n<p>Hello</p>\r\n</body>\r\n");
-    }
-
-    [Test]
-    public async Task ShouldProcessNestedFiles()
-    {
-        // Act
-        await sut.ProcessFiles();
-
-        // Assert
-        var outputFiles = Directory.GetFiles(OutputFolder, Path.Combine("Blog", "*.*"), SearchOption.AllDirectories);
-        outputFiles.Should().HaveCount(1);
-        var outputFile = outputFiles.Single();
-        outputFile.Should().EndWith(Path.Combine("Blog", "post1", "index.html")); //Layered into post1/index.html
-        File.ReadAllText(outputFile).Should().Be("<h1>Some post</h1>\n");
-    }
-
     [TearDown]
     public void TearDown()
     {
@@ -67,24 +30,29 @@ internal class SampleTests
     }
 
     [Test]
-    public async Task ShouldProcessNoteFiles()
+    public async Task ShouldProcessAll()
     {
         // Act
         await sut.ProcessFiles();
 
-        // Assert
-        // Find output from unnested files
-        var outputFiles = Directory.GetFiles(OutputFolder, "*.*", SearchOption.AllDirectories).Where(x => x.Contains("Notes"));
-
-        outputFiles.Should().HaveCount(2);
-        var expected1 = Path.Combine("Notes", "git", "index.html");
-        var expected2 = Path.Combine("Notes", "work-tools", "index.html");
-        outputFiles.Should().Contain(x => x.EndsWith(expected1));
-        outputFiles.Should().Contain(x => x.EndsWith(expected2));
-        //Files contain content
-        File.ReadAllText(outputFiles.First(x => x.EndsWith(expected1))).Should().Contain("<h1>Git</h1>\n<p>Popular version control tool. See more here <a href=\"https://git-scm.com/\">git</a></p>");
-        File.ReadAllText(outputFiles.First(x => x.EndsWith(expected1))).Should().Contain("<a href=\"work-tools\" class=\"backlink__link\">work-tools</a>");
-        File.ReadAllText(outputFiles.First(x => x.EndsWith(expected2))).Should().Contain("<h1>Work tools</h1>\n<p>Some work tools include:</p>\n<ul>\n<li>[[git]]</li>\n<li>Ssdt</li>\n</ul>");
-        File.ReadAllText(outputFiles.First(x => x.EndsWith(expected2))).Should().Contain("<p class=\"backlinks-default\">No backlinks found.</p>");
+        var outputFiles = Directory.GetFiles(OutputFolder, "*.*", SearchOption.AllDirectories);
+        foreach (var outputPath in outputFiles)
+        {
+            var relativePath = Path.GetRelativePath(OutputFolder, outputPath);
+            var expectedPath = Path.Combine("TestSamples", "Expected", relativePath);
+            File.Exists(expectedPath).Should().BeTrue();
+            using var actualFile = File.OpenText(outputPath);
+            using var expectedFile = File.OpenText(expectedPath);
+            //For each line in each file assert that they match expected
+            //This gives better output in case of faillure than just comparing the whole file
+            //Unfortunately it does not compare linebreaks
+            string? actualLine;
+            while ((actualLine = actualFile.ReadLine()) is not null)
+            {
+                var expectedLine = expectedFile.ReadLine();
+                expectedLine.Should().NotBeNull();
+                actualLine.Should().Be(expectedLine);
+            }
+        }
     }
 }
