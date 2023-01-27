@@ -83,7 +83,7 @@ internal class FileProcessor
                     var values = new Value[noteLinks.Count];
                     for (int i = 0; i < noteLinks.Count; i++)
                     {
-                        values[i] = new Dictionary<Value, Value>() { { "Url", noteLinks[i].Url }, { "Title", noteLinks[i].Title } };
+                        values[i] = new Dictionary<Value, Value>() { { "Url", noteLinks[i].Url }, { "Title", noteLinks[i].Title }, { "Preview", noteLinks[i].Preview } };
                     }
                     cottleValues.Add("backlinks", values);
                 }
@@ -99,26 +99,40 @@ internal class FileProcessor
 
     private static async Task<Dictionary<string, List<NoteLink>>> PreProcessNotes(InputFileHandler notesInputHandler)
     {
-        var notes = new HashSet<string>();
-        var links = new Dictionary<string, List<NoteLink>>(); //key: target, value: origins
+        var notes = new Dictionary<string, string>(); //key: url, value: preview
+        var links = new Dictionary<string, List<string>>(); //key: target, value: origins
         foreach (var file in notesInputHandler.FindFiles(".md"))
         {
             var filePath = FilePath.FromString(file);
             var note = filePath.RelativeUrl;
-            notes.Add(note);
             var input = await notesInputHandler.ReadFileAsync(file);
             var pipeline = new MarkdownPipelineBuilder().UseWikiLinks().Build();
             var content = Markdown.Parse(input, pipeline);
+            var asHtml = content.ToHtml();
+            var preview = asHtml.Length > 1000 ? asHtml[0..1000] : asHtml;
+            notes.Add(note, preview);
             foreach (var link in content.Descendants().OfType<WikiLink>())
             {
                 var target = link.Url!;
                 if (!links.ContainsKey(target))
                 {
-                    links.Add(target, new List<NoteLink>());
+                    links.Add(target, new List<string>());
                 }
-                links[target].Add(NoteLink.FromUrl(note)); //Should be titlyfied and - to spaces at some point. Also should add preview
+                links[target].Add(note);
             }
         }
-        return links.Where(x => notes.Contains(x.Key)).ToDictionary(x => x.Key, x => x.Value);
+        var result = new Dictionary<string, List<NoteLink>>();
+        foreach (var link in links)
+        {
+            if (!result.ContainsKey(link.Key))
+            {
+                result.Add(link.Key, new List<NoteLink>());
+            }
+            foreach (var origin in link.Value)
+            {
+                result[link.Key].Add(NoteLink.FromUrl(origin, notes[origin]));
+            }
+        }
+        return result;
     }
 }
