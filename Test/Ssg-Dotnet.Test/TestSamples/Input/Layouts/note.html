@@ -11,6 +11,9 @@
         {for link in backlinks:
         <li class="backlink">
             <a href="{link.Url}" class="backlink__link">{link.Title}</a>
+            <div class="backlink__preview" role="none">
+                {link.Preview}
+            </div>
         </li>
         }
     </ul>
