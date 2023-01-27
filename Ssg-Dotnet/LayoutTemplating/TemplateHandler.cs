@@ -15,19 +15,26 @@ internal class TemplateHandler
         this.templatePath = templatePath;
     }
 
-    public async Task<string> RenderAsync(Dictionary<string, string> content)
+    public async Task<string> RenderAsync(Dictionary<string, string> context, string content)
     {
         if (template == null)
         {
             await PrepareLayout();
         }
+        var values = CreateCottleDict(context, content);
+        var input = Context.CreateBuiltin(values);
+        return template!.Render(input);
+    }
+
+    public static Dictionary<Value, Value> CreateCottleDict(Dictionary<string, string> context, string content)
+    {
         var values = new Dictionary<Value, Value>();
-        foreach (var item in content)
+        foreach (var item in context)
         {
             values.Add(item.Key, item.Value);
         }
-        var context = Context.CreateBuiltin(values);
-        return template!.Render(context);
+        values.Add("content", content);
+        return values;
     }
 
     public async Task<string> RenderAsync(Dictionary<Value, Value> content)

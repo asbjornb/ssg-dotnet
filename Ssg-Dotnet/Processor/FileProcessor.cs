@@ -50,8 +50,7 @@ internal class FileProcessor
                 var content = Markdown.ToHtml(input);
                 //switch extention to .html for outputFile:
                 var outputFile = filePath.ToIndexHtml();
-                var cottleValues = new Dictionary<string, string>(context) { { "content", content } };
-                var output = await templateHandler.RenderAsync(cottleValues);
+                var output = await templateHandler.RenderAsync(context, content);
                 await outputHandler.WriteFileAsync(outputFile.RelativePath, output);
             }
             else
@@ -72,12 +71,7 @@ internal class FileProcessor
                 var content = Markdown.ToHtml(input);
                 //switch extention to .html for outputFile:
                 var outputFile = filePath.ToIndexHtml();
-                var cottleValues = new Dictionary<Value, Value>();
-                foreach (var item in context)
-                {
-                    cottleValues.Add(item.Key, item.Value);
-                }
-                cottleValues.Add("content", content);
+                var cottleValues = TemplateHandler.CreateCottleDict(context, content);
                 if (notes.TryGetValue(filePath.RelativeUrl, out var noteLinks))
                 {
                     var values = new Value[noteLinks.Count];
