@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using Markdig.Helpers;
+﻿using Markdig.Helpers;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
 

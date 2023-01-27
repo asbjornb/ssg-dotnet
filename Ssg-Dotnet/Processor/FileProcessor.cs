@@ -116,7 +116,7 @@ internal class FileProcessor
                 {
                     links.Add(target, new List<NoteLink>());
                 }
-                links[target].Add(new NoteLink(note, note)); //Should be titlyfied and - to spaces at some point. Also should add preview
+                links[target].Add(NoteLink.FromUrl(note)); //Should be titlyfied and - to spaces at some point. Also should add preview
             }
         }
         return links.Where(x => notes.Contains(x.Key)).ToDictionary(x => x.Key, x => x.Value);
