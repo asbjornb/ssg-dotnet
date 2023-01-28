@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Markdig;
 using Markdig.Syntax;
@@ -34,5 +36,10 @@ public sealed class MarkdownFile
     public string ToHtml()
     {
         return Content.ToHtml();
+    }
+
+    public IEnumerable<T> GetDescendants<T>()
+    {
+        return Content.Descendants().OfType<T>();
     }
 }

@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Markdig;
-using Markdig.Syntax;
 using Ssg_Dotnet.Config;
 using Ssg_Dotnet.Files;
 using Ssg_Dotnet.LayoutTemplating;
@@ -100,7 +98,7 @@ internal class FileProcessor
         var backlinks = new Dictionary<string, List<string>>();
         foreach(var mdFile in mdFiles)
         {
-            foreach (var wikiLink in mdFile.Content.Descendants().OfType<WikiLink>())
+            foreach (var wikiLink in mdFile.GetDescendants<WikiLink>())
             {
                 var target = wikiLink.Url!;
                 if (!backlinks.ContainsKey(target))
