@@ -30,6 +30,7 @@ public sealed class FilePath
     public string FileNameWithExtension => FileName + Extension;
     public string RelativePath => Path.Combine(RelativeDir, FileNameWithExtension);
     public string RelativeUrl => Path.Combine(RelativeDir, FileName);
+    public string AbsolutePath => Path.Combine(baseDir, RelativePath);
 
     public FilePath ToIndexHtml()
     {

@@ -20,5 +20,6 @@ internal class FilePathTests
         filePath.Extension.Should().Be(Extension);
         filePath.FileNameWithExtension.Should().Be(FileName + Extension);
         filePath.RelativeUrl.Should().Be(Path.Combine(SubFolder, FileName));
+        filePath.AbsolutePath.Should().Be(fullPath);
     }
 }

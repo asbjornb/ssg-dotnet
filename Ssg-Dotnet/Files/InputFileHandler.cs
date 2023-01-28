@@ -33,4 +33,9 @@ internal class InputFileHandler
         var path = Path.Combine(inputFolder, relativePath);
         return await File.ReadAllTextAsync(path);
     }
+
+    public async Task<string> ReadFileAsync(FilePath path)
+    {
+        return await File.ReadAllTextAsync(path.AbsolutePath);
+    }
 }
