@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Cottle;
 using Markdig;
 using Markdig.Syntax;
 using Ssg_Dotnet.Config;
@@ -34,33 +33,19 @@ internal class FileProcessor
 
     public async Task ProcessFiles()
     {
-        await ProcessFolder(inputHandler, outputHandler, contentTemplateHandler, new Dictionary<string, string>());
+        await ProcessFolder(inputHandler, outputHandler, contentTemplateHandler);
         var notes = await PreProcessNotes(notesInputHandler);
-        await ProcessNotes(notesInputHandler, notesOutputHandler, noteTemplateHandler, new Dictionary<string, string>(), notes);
+        await ProcessFolder(notesInputHandler, notesOutputHandler, noteTemplateHandler, new Dictionary<string, string>(), notes);
     }
 
-    private static async Task ProcessFolder(InputFileHandler inputHandler, OutputFileHandler outputHandler, TemplateHandler templateHandler, Dictionary<string, string> context)
+    private static async Task ProcessFolder(InputFileHandler inputHandler, OutputFileHandler outputHandler, TemplateHandler templateHandler)
     {
-        foreach (var file in inputHandler.FindFiles())
-        {
-            var filePath = FilePath.FromString(file);
-            if (filePath.Extension == ".md")
-            {
-                var input = await inputHandler.ReadFileAsync(file);
-                var content = Markdown.ToHtml(input);
-                //switch extention to .html for outputFile:
-                var outputFile = filePath.ToIndexHtml();
-                var output = await templateHandler.RenderAsync(context, content);
-                await outputHandler.WriteFileAsync(outputFile.RelativePath, output);
-            }
-            else
-            {
-                outputHandler.CopyFile(file);
-            }
-        }
+        var overallContext = new Dictionary<string, string>();
+        var individualFileContexts = new Dictionary<string, ICottleEntry>();
+        await ProcessFolder(inputHandler, outputHandler, templateHandler, overallContext, individualFileContexts);
     }
 
-    private static async Task ProcessNotes(InputFileHandler inputHandler, OutputFileHandler outputHandler, TemplateHandler templateHandler, Dictionary<string, string> overallContext, Dictionary<string, ICottleEntry> individualFileContexts)
+    private static async Task ProcessFolder(InputFileHandler inputHandler, OutputFileHandler outputHandler, TemplateHandler templateHandler, Dictionary<string, string> overallContext, Dictionary<string, ICottleEntry> individualFileContexts)
     {
         foreach (var file in inputHandler.FindFiles())
         {
@@ -72,9 +57,9 @@ internal class FileProcessor
                 //switch extention to .html for outputFile:
                 var outputFile = filePath.ToIndexHtml();
                 var cottleValues = new FileContext(overallContext, content);
-                if (individualFileContexts.TryGetValue(filePath.RelativeUrl, out var noteLinks))
+                if (individualFileContexts.TryGetValue(filePath.RelativeUrl, out var individualFileContext))
                 {
-                    cottleValues.AddCottleEntry(noteLinks);
+                    cottleValues.AddCottleEntry(individualFileContext);
                 }
                 var output = await templateHandler.RenderAsync(cottleValues);
                 await outputHandler.WriteFileAsync(outputFile.RelativePath, output);
