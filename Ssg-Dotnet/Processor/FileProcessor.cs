@@ -74,12 +74,7 @@ internal class FileProcessor
                 var cottleValues = new FileContext(context, content);
                 if (notes.TryGetValue(filePath.RelativeUrl, out var noteLinks))
                 {
-                    var values = new Value[noteLinks.Count];
-                    for (int i = 0; i < noteLinks.Count; i++)
-                    {
-                        values[i] = new Dictionary<Value, Value>() { { "Url", noteLinks[i].Url }, { "Title", noteLinks[i].Title }, { "Preview", noteLinks[i].Preview } };
-                    }
-                    cottleValues.Add("backlinks", values);
+                    cottleValues.AddBacklinks(noteLinks);
                 }
                 var output = await templateHandler.RenderAsync(cottleValues);
                 await outputHandler.WriteFileAsync(outputFile.RelativePath, output);
