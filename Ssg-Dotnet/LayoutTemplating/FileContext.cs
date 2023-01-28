@@ -15,13 +15,9 @@ internal class FileContext : Dictionary<Value, Value>
         Add("content", content);
     }
 
-    public void AddBacklinks(List<NoteLink> noteLinks)
+    public void AddBacklinks(NoteLinkCollection noteLinks)
     {
-        var values = new Value[noteLinks.Count];
-        for (int i = 0; i < noteLinks.Count; i++)
-        {
-            values[i] = new Dictionary<Value, Value>() { { "Url", noteLinks[i].Url }, { "Title", noteLinks[i].Title }, { "Preview", noteLinks[i].Preview } };
-        }
-        Add("backlinks", values);
+        (var key, var value) = noteLinks.ToCottleContext();
+        Add(key, value);
     }
 }

@@ -60,7 +60,7 @@ internal class FileProcessor
         }
     }
 
-    private static async Task ProcessNotes(InputFileHandler inputHandler, OutputFileHandler outputHandler, TemplateHandler templateHandler, Dictionary<string, string> context, Dictionary<string, List<NoteLink>> notes)
+    private static async Task ProcessNotes(InputFileHandler inputHandler, OutputFileHandler outputHandler, TemplateHandler templateHandler, Dictionary<string, string> context, Dictionary<string, NoteLinkCollection> notes)
     {
         foreach (var file in inputHandler.FindFiles())
         {
@@ -86,7 +86,7 @@ internal class FileProcessor
         }
     }
 
-    private static async Task<Dictionary<string, List<NoteLink>>> PreProcessNotes(InputFileHandler notesInputHandler)
+    private static async Task<Dictionary<string, NoteLinkCollection>> PreProcessNotes(InputFileHandler notesInputHandler)
     {
         var notes = new Dictionary<string, string>(); //key: url, value: preview
         var links = new Dictionary<string, List<string>>(); //key: target, value: origins
@@ -110,12 +110,12 @@ internal class FileProcessor
                 links[target].Add(note);
             }
         }
-        var result = new Dictionary<string, List<NoteLink>>();
+        var result = new Dictionary<string, NoteLinkCollection>();
         foreach (var link in links)
         {
             if (!result.ContainsKey(link.Key))
             {
-                result.Add(link.Key, new List<NoteLink>());
+                result.Add(link.Key, new NoteLinkCollection());
             }
             foreach (var origin in link.Value)
             {
