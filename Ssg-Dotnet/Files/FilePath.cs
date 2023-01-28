@@ -2,27 +2,41 @@
 
 namespace Ssg_Dotnet.Files;
 
-internal record FilePath(string DirectoryPath, string FileName, string Extension)
+public sealed class FilePath
 {
-    public static FilePath FromString(string relativePath)
+    private readonly string baseDir; 
+    public string RelativeDir { get; }
+    public string FileName { get; }
+    public string Extension { get; }
+
+    private FilePath(string baseDir, string relativeDir, string fileName, string extension)
+    {
+        this.baseDir = baseDir;
+        RelativeDir = relativeDir;
+        FileName = fileName;
+        Extension = extension;
+    }
+
+    public static FilePath FromFullPath(string fullPath, string relativeTo)
     {
         return new FilePath(
-            DirectoryPath: Path.GetDirectoryName(relativePath)!,
-            FileName: Path.GetFileNameWithoutExtension(relativePath)!,
-            Extension: Path.GetExtension(relativePath).ToLower()!
+            baseDir: relativeTo,
+            relativeDir: Path.GetDirectoryName(Path.GetRelativePath(relativeTo, fullPath))!,
+            fileName: Path.GetFileNameWithoutExtension(fullPath)!,
+            extension: Path.GetExtension(fullPath).ToLower()!
         );
     }
 
     public string FileNameWithExtension => FileName + Extension;
-    public string RelativePath => Path.Combine(DirectoryPath, FileNameWithExtension);
-    public string RelativeUrl => Path.Combine(DirectoryPath, FileName);
+    public string RelativePath => Path.Combine(RelativeDir, FileNameWithExtension);
+    public string RelativeUrl => Path.Combine(RelativeDir, FileName);
 
     public FilePath ToIndexHtml()
     {
         if (FileName == "index")
         {
-            return this with { Extension = ".html" };
+            return new(baseDir, RelativeDir, FileName, ".html");
         }
-        return new(DirectoryPath: Path.Combine(DirectoryPath, FileName), FileName: "index", Extension: ".html");
+        return new(baseDir, Path.Combine(RelativeDir, FileName), fileName: "index", extension: ".html");
     }
 }

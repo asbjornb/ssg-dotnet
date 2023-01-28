@@ -15,17 +15,17 @@ internal class InputFileHandler
     }
 
     //Returns relative paths to files in the input folder
-    public IEnumerable<string> FindFiles(string extension)
+    public IEnumerable<FilePath> FindFiles(string extension)
     {
         var files = Directory.GetFiles(inputFolder, $"*{extension}", SearchOption.AllDirectories);
-        return files.Select(x => Path.GetRelativePath(inputFolder, x));
+        return files.Select(x => FilePath.FromFullPath(x, inputFolder));
     }
 
     //Returns relative paths to files in the input folder
-    public IEnumerable<string> FindFiles()
+    public IEnumerable<FilePath> FindFiles()
     {
         var files = Directory.GetFiles(inputFolder, "*.*", SearchOption.AllDirectories);
-        return files.Select(x => Path.GetRelativePath(inputFolder, x));
+        return files.Select(x => FilePath.FromFullPath(x, inputFolder));
     }
 
     public async Task<string> ReadFileAsync(string relativePath)

@@ -51,15 +51,14 @@ internal class FileProcessor
     {
         foreach (var file in inputHandler.FindFiles())
         {
-            var filePath = FilePath.FromString(file);
-            if (filePath.Extension == ".md")
+            if (file.Extension == ".md")
             {
-                var input = await inputHandler.ReadFileAsync(file);
+                var input = await inputHandler.ReadFileAsync(file.RelativePath);
                 var content = Markdown.ToHtml(input, pipeline);
                 //switch extention to .html for outputFile:
-                var outputFile = filePath.ToIndexHtml();
+                var outputFile = file.ToIndexHtml();
                 var cottleValues = new FileContext(overallContext, content);
-                if (individualFileContexts.TryGetValue(filePath.RelativeUrl, out var individualFileContext))
+                if (individualFileContexts.TryGetValue(file.RelativeUrl, out var individualFileContext))
                 {
                     cottleValues.AddCottleEntry(individualFileContext);
                 }
@@ -68,7 +67,7 @@ internal class FileProcessor
             }
             else
             {
-                outputHandler.CopyFile(file);
+                outputHandler.CopyFile(file.RelativePath);
             }
         }
     }
@@ -79,9 +78,8 @@ internal class FileProcessor
         var links = new Dictionary<string, List<string>>(); //key: target, value: origins
         foreach (var file in notesInputHandler.FindFiles(".md"))
         {
-            var filePath = FilePath.FromString(file);
-            var note = filePath.RelativeUrl;
-            var input = await notesInputHandler.ReadFileAsync(file);
+            var note = file.RelativeUrl;
+            var input = await notesInputHandler.ReadFileAsync(file.RelativePath);
             var content = Markdown.Parse(input, pipeline);
             var asHtml = content.ToHtml();
             var preview = asHtml.Length > 1000 ? asHtml[0..1000] : asHtml;
