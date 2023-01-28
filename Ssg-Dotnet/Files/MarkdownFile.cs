@@ -7,12 +7,14 @@ namespace Ssg_Dotnet.Files;
 
 public sealed class MarkdownFile
 {
-    public FilePath Path { get; }
+    private FilePath path;
+
     public MarkdownDocument Content { get; }
+    public string RelativeUrl => path.RelativeUrl;
 
     private MarkdownFile(FilePath path, MarkdownDocument content)
     {
-        Path = path;
+        this.path = path;
         Content = content;
     }
 

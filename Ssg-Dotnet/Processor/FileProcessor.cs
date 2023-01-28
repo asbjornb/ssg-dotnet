@@ -107,7 +107,7 @@ internal class FileProcessor
                 {
                     backlinks.Add(target, new List<string>());
                 }
-                backlinks[target].Add(mdFile.Path.RelativeUrl);
+                backlinks[target].Add(mdFile.RelativeUrl);
             }
         }
         return backlinks;
@@ -118,7 +118,7 @@ internal class FileProcessor
         var notePreviews = new Dictionary<string, string>();
         foreach(var mdFile in mdFiles)
         {
-            notePreviews.Add(mdFile.Path.RelativeUrl, mdFile.GetPreview());
+            notePreviews.Add(mdFile.RelativeUrl, mdFile.GetPreview());
         }
         return notePreviews;
     }
