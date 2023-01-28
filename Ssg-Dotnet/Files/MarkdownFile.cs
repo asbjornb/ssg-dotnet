@@ -26,4 +26,9 @@ public sealed class MarkdownFile
         var asHtml = Content.ToHtml();
         return asHtml.Length > 1000 ? asHtml[0..1000] : asHtml;
     }
+
+    public string ToHtml()
+    {
+        return Content.ToHtml();
+    }
 }

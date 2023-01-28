@@ -53,16 +53,16 @@ internal class FileProcessor
         {
             if (file.Extension == ".md")
             {
-                var input = await InputFileHandler.ReadFileAsync(file);
-                var content = Markdown.ToHtml(input, pipeline);
-                //switch extention to .html for outputFile:
-                var outputFile = file.ToIndexHtml();
-                var cottleValues = new FileContext(overallContext, content);
+                var content = await MarkdownFile.ReadFromFile(file, pipeline);
+                var cottleValues = new FileContext(overallContext, content.ToHtml());
                 if (individualFileContexts.TryGetValue(file.RelativeUrl, out var individualFileContext))
                 {
                     cottleValues.AddCottleEntry(individualFileContext);
                 }
                 var output = await templateHandler.RenderAsync(cottleValues);
+                
+                //switch extention to .html for outputFile:
+                var outputFile = file.ToIndexHtml();
                 await outputHandler.WriteFileAsync(outputFile.RelativePath, output);
             }
             else
