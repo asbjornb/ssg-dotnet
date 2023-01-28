@@ -7,10 +7,12 @@ namespace Ssg_Dotnet.Files;
 
 public sealed class MarkdownFile
 {
+    public FilePath Path { get; }
     public MarkdownDocument Content { get; }
 
-    private MarkdownFile(MarkdownDocument content)
+    private MarkdownFile(FilePath path, MarkdownDocument content)
     {
+        Path = path;
         Content = content;
     }
 
@@ -18,7 +20,7 @@ public sealed class MarkdownFile
     {
         var input = await File.ReadAllTextAsync(filePath.AbsolutePath);
         var content = Markdown.Parse(input, pipeline);
-        return new MarkdownFile(content);
+        return new MarkdownFile(filePath, content);
     }
 
     public string GetPreview()

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -74,14 +75,15 @@ internal class FileProcessor
 
     private static async Task<Dictionary<string, ICottleEntry>> PreProcessNotes(InputFileHandler notesInputHandler, MarkdownPipeline pipeline)
     {
-        var notePreviews = new Dictionary<string, string>(); //key: url, value: preview
+        var mdFilePaths = notesInputHandler.FindFiles(".md");
+        var mdFiles = await Task.WhenAll(mdFilePaths.Select(async file => await MarkdownFile.ReadFromFile(file, pipeline)));
+        var notePreviews = GetNotePreviews(mdFiles); //key: url, value: preview
         var backLinks = new Dictionary<string, List<string>>(); //key: target, value: origins
         foreach (var file in notesInputHandler.FindFiles(".md"))
         {
             var noteUrl = file.RelativeUrl;
             var content = await MarkdownFile.ReadFromFile(file, pipeline);
             var preview = content.GetPreview();
-            notePreviews.Add(noteUrl, preview);
             foreach (var wikiLink in content.Content.Descendants().OfType<WikiLink>())
             {
                 var target = wikiLink.Url!;
@@ -105,5 +107,15 @@ internal class FileProcessor
             }
         }
         return result;
+    }
+
+    private static Dictionary<string, string> GetNotePreviews(IEnumerable<MarkdownFile> mdFiles)
+    {
+        var notePreviews = new Dictionary<string, string>();
+        foreach(var mdFile in mdFiles)
+        {
+            notePreviews.Add(mdFile.Path.RelativeUrl, mdFile.GetPreview());
+        }
+        return notePreviews;
     }
 }
