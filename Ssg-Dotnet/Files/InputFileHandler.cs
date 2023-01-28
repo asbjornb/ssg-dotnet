@@ -28,7 +28,7 @@ internal class InputFileHandler
         return files.Select(x => FilePath.FromFullPath(x, inputFolder));
     }
 
-    public async Task<string> ReadFileAsync(FilePath path)
+    public static async Task<string> ReadFileAsync(FilePath path)
     {
         return await File.ReadAllTextAsync(path.AbsolutePath);
     }

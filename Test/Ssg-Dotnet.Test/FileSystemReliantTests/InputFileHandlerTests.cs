@@ -32,7 +32,7 @@ internal class InputFileHandlerTests
         var filePath = FilePath.FromFullPath(Path.Combine(helper.FolderName, FileName), helper.FolderName);
 
         //Act
-        var content = await sut.ReadFileAsync(filePath);
+        var content = await InputFileHandler.ReadFileAsync(filePath);
 
         //Assert
         content.Should().Be(Content);
