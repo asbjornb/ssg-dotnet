@@ -4,7 +4,7 @@ using Ssg_Dotnet.Files;
 namespace Ssg_Dotnet.Test.FileSystemReliantTests;
 
 [TestFixture, Parallelizable(ParallelScope.Self)]
-public class InputFileHandlerTests
+internal class InputFileHandlerTests
 {
     private FileSystemHelper helper;
     private InputFileHandler sut;

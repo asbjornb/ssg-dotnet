@@ -21,20 +21,9 @@ internal class TemplateHandler
         {
             await PrepareLayout();
         }
-        var values = CreateCottleDict(context, content);
+        var values = new FileContext(context, content);
         var input = Context.CreateBuiltin(values);
         return template!.Render(input);
-    }
-
-    public static Dictionary<Value, Value> CreateCottleDict(Dictionary<string, string> context, string content)
-    {
-        var values = new Dictionary<Value, Value>();
-        foreach (var item in context)
-        {
-            values.Add(item.Key, item.Value);
-        }
-        values.Add("content", content);
-        return values;
     }
 
     public async Task<string> RenderAsync(Dictionary<Value, Value> content)
