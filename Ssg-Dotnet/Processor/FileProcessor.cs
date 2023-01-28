@@ -78,22 +78,8 @@ internal class FileProcessor
         var mdFilePaths = notesInputHandler.FindFiles(".md");
         var mdFiles = await Task.WhenAll(mdFilePaths.Select(async file => await MarkdownFile.ReadFromFile(file, pipeline)));
         var notePreviews = GetNotePreviews(mdFiles); //key: url, value: preview
-        var backLinks = new Dictionary<string, List<string>>(); //key: target, value: origins
-        foreach (var file in notesInputHandler.FindFiles(".md"))
-        {
-            var noteUrl = file.RelativeUrl;
-            var content = await MarkdownFile.ReadFromFile(file, pipeline);
-            var preview = content.GetPreview();
-            foreach (var wikiLink in content.Content.Descendants().OfType<WikiLink>())
-            {
-                var target = wikiLink.Url!;
-                if (!backLinks.ContainsKey(target))
-                {
-                    backLinks.Add(target, new List<string>());
-                }
-                backLinks[target].Add(noteUrl);
-            }
-        }
+        var backLinks = GetBacklinks(mdFiles, notePreviews); //key: target, value: origins
+
         var result = new Dictionary<string, ICottleEntry>();
         foreach (var link in backLinks)
         {
@@ -107,6 +93,24 @@ internal class FileProcessor
             }
         }
         return result;
+    }
+
+    private static Dictionary<string, List<string>> GetBacklinks(IEnumerable<MarkdownFile> mdFiles, Dictionary<string, string> notePreviews)
+    {
+        var backlinks = new Dictionary<string, List<string>>();
+        foreach(var mdFile in mdFiles)
+        {
+            foreach (var wikiLink in mdFile.Content.Descendants().OfType<WikiLink>())
+            {
+                var target = wikiLink.Url!;
+                if (!backlinks.ContainsKey(target))
+                {
+                    backlinks.Add(target, new List<string>());
+                }
+                backlinks[target].Add(mdFile.Path.RelativeUrl);
+            }
+        }
+        return backlinks;
     }
 
     private static Dictionary<string, string> GetNotePreviews(IEnumerable<MarkdownFile> mdFiles)
