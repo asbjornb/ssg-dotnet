@@ -80,8 +80,7 @@ internal class FileProcessor
         {
             var note = file.RelativeUrl;
             var content = await MarkdownFile.ReadFromFile(file, pipeline);
-            var asHtml = content.Content.ToHtml();
-            var preview = asHtml.Length > 1000 ? asHtml[0..1000] : asHtml;
+            string preview = content.GetPreview();
             notes.Add(note, preview);
             foreach (var link in content.Content.Descendants().OfType<WikiLink>())
             {

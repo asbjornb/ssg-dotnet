@@ -8,7 +8,7 @@ namespace Ssg_Dotnet.Files;
 public sealed class MarkdownFile
 {
     public MarkdownDocument Content { get; }
-    
+
     private MarkdownFile(MarkdownDocument content)
     {
         Content = content;
@@ -19,5 +19,11 @@ public sealed class MarkdownFile
         var input = await File.ReadAllTextAsync(filePath.AbsolutePath);
         var content = Markdown.Parse(input, pipeline);
         return new MarkdownFile(content);
+    }
+
+    public string GetPreview()
+    {
+        var asHtml = Content.ToHtml();
+        return asHtml.Length > 1000 ? asHtml[0..1000] : asHtml;
     }
 }
