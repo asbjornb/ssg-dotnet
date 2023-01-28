@@ -40,14 +40,14 @@ internal class FileProcessor
         await ProcessFolder(notesInputHandler, notesOutputHandler, noteTemplateHandler, new Dictionary<string, string>(), notes);
     }
 
-    private static async Task ProcessFolder(InputFileHandler inputHandler, OutputFileHandler outputHandler, TemplateHandler templateHandler)
+    private async Task ProcessFolder(InputFileHandler inputHandler, OutputFileHandler outputHandler, TemplateHandler templateHandler)
     {
         var overallContext = new Dictionary<string, string>();
         var individualFileContexts = new Dictionary<string, ICottleEntry>();
         await ProcessFolder(inputHandler, outputHandler, templateHandler, overallContext, individualFileContexts);
     }
 
-    private static async Task ProcessFolder(InputFileHandler inputHandler, OutputFileHandler outputHandler, TemplateHandler templateHandler, Dictionary<string, string> overallContext, Dictionary<string, ICottleEntry> individualFileContexts)
+    private async Task ProcessFolder(InputFileHandler inputHandler, OutputFileHandler outputHandler, TemplateHandler templateHandler, Dictionary<string, string> overallContext, Dictionary<string, ICottleEntry> individualFileContexts)
     {
         foreach (var file in inputHandler.FindFiles())
         {
@@ -55,7 +55,7 @@ internal class FileProcessor
             if (filePath.Extension == ".md")
             {
                 var input = await inputHandler.ReadFileAsync(file);
-                var content = Markdown.ToHtml(input);
+                var content = Markdown.ToHtml(input, pipeline);
                 //switch extention to .html for outputFile:
                 var outputFile = filePath.ToIndexHtml();
                 var cottleValues = new FileContext(overallContext, content);
