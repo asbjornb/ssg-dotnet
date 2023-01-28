@@ -1,5 +1,7 @@
-﻿using Ssg_Dotnet.Config;
+﻿using Markdig;
+using Ssg_Dotnet.Config;
 using Ssg_Dotnet.Processor;
+using Ssg_Dotnet.WikiLinks;
 
 namespace Ssg_Dotnet.Test.ProcessorTests;
 
@@ -17,7 +19,7 @@ internal class SampleTests
     public void SetUp()
     {
         var config = new ConfigRecord(inputFolder, OutputFolder, notesFolder, contentTemplatePath, noteTemplatePath);
-        sut = new FileProcessor(config);
+        sut = new FileProcessor(config, new MarkdownPipelineBuilder().UseWikiLinks().Build());
     }
 
     [TearDown]

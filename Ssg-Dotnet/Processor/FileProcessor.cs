@@ -20,8 +20,9 @@ internal class FileProcessor
     private readonly OutputFileHandler notesOutputHandler;
     private readonly TemplateHandler contentTemplateHandler;
     private readonly TemplateHandler noteTemplateHandler;
+    private readonly MarkdownPipeline pipeline;
 
-    public FileProcessor(IConfig config)
+    public FileProcessor(IConfig config, MarkdownPipeline pipeline)
     {
         inputHandler = new InputFileHandler(config.InputFolder);
         outputHandler = new OutputFileHandler(config.InputFolder, config.OutputFolder);
@@ -29,12 +30,13 @@ internal class FileProcessor
         notesOutputHandler = new OutputFileHandler(config.NoteFolder, Path.Combine(config.OutputFolder, "Notes"));
         contentTemplateHandler = new TemplateHandler(config.ContentTemplatePath);
         noteTemplateHandler = new TemplateHandler(config.NoteTemplatePath);
+        this.pipeline = pipeline;
     }
 
     public async Task ProcessFiles()
     {
         await ProcessFolder(inputHandler, outputHandler, contentTemplateHandler);
-        var notes = await PreProcessNotes(notesInputHandler);
+        var notes = await PreProcessNotes(notesInputHandler, pipeline);
         await ProcessFolder(notesInputHandler, notesOutputHandler, noteTemplateHandler, new Dictionary<string, string>(), notes);
     }
 
@@ -71,7 +73,7 @@ internal class FileProcessor
         }
     }
 
-    private static async Task<Dictionary<string, ICottleEntry>> PreProcessNotes(InputFileHandler notesInputHandler)
+    private static async Task<Dictionary<string, ICottleEntry>> PreProcessNotes(InputFileHandler notesInputHandler, MarkdownPipeline pipeline)
     {
         var notes = new Dictionary<string, string>(); //key: url, value: preview
         var links = new Dictionary<string, List<string>>(); //key: target, value: origins
@@ -80,7 +82,6 @@ internal class FileProcessor
             var filePath = FilePath.FromString(file);
             var note = filePath.RelativeUrl;
             var input = await notesInputHandler.ReadFileAsync(file);
-            var pipeline = new MarkdownPipelineBuilder().UseWikiLinks().Build();
             var content = Markdown.Parse(input, pipeline);
             var asHtml = content.ToHtml();
             var preview = asHtml.Length > 1000 ? asHtml[0..1000] : asHtml;

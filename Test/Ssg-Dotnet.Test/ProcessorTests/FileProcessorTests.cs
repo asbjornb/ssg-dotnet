@@ -1,6 +1,8 @@
-﻿using Ssg_Dotnet.Config;
+﻿using Markdig;
+using Ssg_Dotnet.Config;
 using Ssg_Dotnet.Processor;
 using Ssg_Dotnet.Test.FileSystemReliantTests;
+using Ssg_Dotnet.WikiLinks;
 
 namespace Ssg_Dotnet.Test.ProcessorTests;
 
@@ -29,7 +31,7 @@ internal class FileProcessorTests
         using var notesHelper = new FileSystemHelper(); //Empty notes folder
 
         var config = new ConfigRecord(inputHelper.FolderName, outputHelper.FolderName, notesHelper.FolderName, templatePath, templatePath);
-        var sut = new FileProcessor(config);
+        var sut = new FileProcessor(config, new MarkdownPipelineBuilder().UseWikiLinks().Build());
 
         // Act
         await sut.ProcessFiles();
@@ -57,7 +59,7 @@ internal class FileProcessorTests
         await notesHelper.CreateFileWithContent("note2.md", "# Some header 2\n\n[note1](note1.md)");
 
         var config = new ConfigRecord(inputHelper.FolderName, outputHelper.FolderName, notesHelper.FolderName, templatePath, templatePath);
-        var sut = new FileProcessor(config);
+        var sut = new FileProcessor(config, new MarkdownPipelineBuilder().UseWikiLinks().Build());
 
         // Act
         await sut.ProcessFiles();
