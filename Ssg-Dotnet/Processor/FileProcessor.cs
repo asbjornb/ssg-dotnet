@@ -71,7 +71,7 @@ internal class FileProcessor
                 var content = Markdown.ToHtml(input);
                 //switch extention to .html for outputFile:
                 var outputFile = filePath.ToIndexHtml();
-                var cottleValues = TemplateHandler.CreateCottleDict(context, content);
+                var cottleValues = new FileContext(context, content);
                 if (notes.TryGetValue(filePath.RelativeUrl, out var noteLinks))
                 {
                     var values = new Value[noteLinks.Count];
