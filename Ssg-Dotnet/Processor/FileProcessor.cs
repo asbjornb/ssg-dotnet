@@ -53,7 +53,7 @@ internal class FileProcessor
         {
             if (file.Extension == ".md")
             {
-                var input = await inputHandler.ReadFileAsync(file.RelativePath);
+                var input = await inputHandler.ReadFileAsync(file);
                 var content = Markdown.ToHtml(input, pipeline);
                 //switch extention to .html for outputFile:
                 var outputFile = file.ToIndexHtml();
@@ -79,7 +79,7 @@ internal class FileProcessor
         foreach (var file in notesInputHandler.FindFiles(".md"))
         {
             var note = file.RelativeUrl;
-            var input = await notesInputHandler.ReadFileAsync(file.RelativePath);
+            var input = await notesInputHandler.ReadFileAsync(file);
             var content = Markdown.Parse(input, pipeline);
             var asHtml = content.ToHtml();
             var preview = asHtml.Length > 1000 ? asHtml[0..1000] : asHtml;

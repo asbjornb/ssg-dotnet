@@ -29,9 +29,10 @@ internal class InputFileHandlerTests
         const string FileName = "now.md";
         const string Content = "Some content";
         await helper.CreateFileWithContent(FileName, Content);
+        var filePath = FilePath.FromFullPath(Path.Combine(helper.FolderName, FileName), helper.FolderName);
 
         //Act
-        var content = await sut.ReadFileAsync(FileName);
+        var content = await sut.ReadFileAsync(filePath);
 
         //Assert
         content.Should().Be(Content);
