@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Cottle;
-using Ssg_Dotnet.Notes;
 
 namespace Ssg_Dotnet.LayoutTemplating;
 
@@ -15,9 +14,10 @@ internal class FileContext : Dictionary<Value, Value>
         Add("content", content);
     }
 
-    public void AddBacklinks(NoteLinkCollection noteLinks)
+    //Used for adding specific entries for a given file - like backlinks
+    public void AddCottleEntry(ICottleEntry cottleEntry)
     {
-        (var key, var value) = noteLinks.ToCottleContext();
+        (var key, var value) = cottleEntry.ToCottleContext();
         Add(key, value);
     }
 }

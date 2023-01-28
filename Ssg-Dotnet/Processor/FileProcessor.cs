@@ -60,7 +60,7 @@ internal class FileProcessor
         }
     }
 
-    private static async Task ProcessNotes(InputFileHandler inputHandler, OutputFileHandler outputHandler, TemplateHandler templateHandler, Dictionary<string, string> context, Dictionary<string, NoteLinkCollection> notes)
+    private static async Task ProcessNotes(InputFileHandler inputHandler, OutputFileHandler outputHandler, TemplateHandler templateHandler, Dictionary<string, string> overallContext, Dictionary<string, ICottleEntry> individualFileContexts)
     {
         foreach (var file in inputHandler.FindFiles())
         {
@@ -71,10 +71,10 @@ internal class FileProcessor
                 var content = Markdown.ToHtml(input);
                 //switch extention to .html for outputFile:
                 var outputFile = filePath.ToIndexHtml();
-                var cottleValues = new FileContext(context, content);
-                if (notes.TryGetValue(filePath.RelativeUrl, out var noteLinks))
+                var cottleValues = new FileContext(overallContext, content);
+                if (individualFileContexts.TryGetValue(filePath.RelativeUrl, out var noteLinks))
                 {
-                    cottleValues.AddBacklinks(noteLinks);
+                    cottleValues.AddCottleEntry(noteLinks);
                 }
                 var output = await templateHandler.RenderAsync(cottleValues);
                 await outputHandler.WriteFileAsync(outputFile.RelativePath, output);
@@ -86,7 +86,7 @@ internal class FileProcessor
         }
     }
 
-    private static async Task<Dictionary<string, NoteLinkCollection>> PreProcessNotes(InputFileHandler notesInputHandler)
+    private static async Task<Dictionary<string, ICottleEntry>> PreProcessNotes(InputFileHandler notesInputHandler)
     {
         var notes = new Dictionary<string, string>(); //key: url, value: preview
         var links = new Dictionary<string, List<string>>(); //key: target, value: origins
@@ -110,7 +110,7 @@ internal class FileProcessor
                 links[target].Add(note);
             }
         }
-        var result = new Dictionary<string, NoteLinkCollection>();
+        var result = new Dictionary<string, ICottleEntry>();
         foreach (var link in links)
         {
             if (!result.ContainsKey(link.Key))
@@ -119,7 +119,7 @@ internal class FileProcessor
             }
             foreach (var origin in link.Value)
             {
-                result[link.Key].Add(NoteLink.FromUrl(origin, notes[origin]));
+                ((NoteLinkCollection)result[link.Key]).Add(NoteLink.FromUrl(origin, notes[origin]));
             }
         }
         return result;

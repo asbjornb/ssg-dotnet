@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using Cottle;
+using Ssg_Dotnet.LayoutTemplating;
 
 namespace Ssg_Dotnet.Notes;
-//Should be used for both forward and backward linking
-internal class NoteLinkCollection : List<NoteLink>
+internal class NoteLinkCollection : List<NoteLink>, ICottleEntry
 {
     public (Value, Value) ToCottleContext()
     {
