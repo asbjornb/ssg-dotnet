@@ -79,12 +79,11 @@ internal class FileProcessor
         foreach (var file in notesInputHandler.FindFiles(".md"))
         {
             var note = file.RelativeUrl;
-            var input = await InputFileHandler.ReadFileAsync(file);
-            var content = Markdown.Parse(input, pipeline);
-            var asHtml = content.ToHtml();
+            var content = await MarkdownFile.ReadFromFile(file, pipeline);
+            var asHtml = content.Content.ToHtml();
             var preview = asHtml.Length > 1000 ? asHtml[0..1000] : asHtml;
             notes.Add(note, preview);
-            foreach (var link in content.Descendants().OfType<WikiLink>())
+            foreach (var link in content.Content.Descendants().OfType<WikiLink>())
             {
                 var target = link.Url!;
                 if (!links.ContainsKey(target))
