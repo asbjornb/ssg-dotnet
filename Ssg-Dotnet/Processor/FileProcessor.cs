@@ -74,26 +74,26 @@ internal class FileProcessor
 
     private static async Task<Dictionary<string, ICottleEntry>> PreProcessNotes(InputFileHandler notesInputHandler, MarkdownPipeline pipeline)
     {
-        var notes = new Dictionary<string, string>(); //key: url, value: preview
-        var links = new Dictionary<string, List<string>>(); //key: target, value: origins
+        var notePreviews = new Dictionary<string, string>(); //key: url, value: preview
+        var backLinks = new Dictionary<string, List<string>>(); //key: target, value: origins
         foreach (var file in notesInputHandler.FindFiles(".md"))
         {
-            var note = file.RelativeUrl;
+            var noteUrl = file.RelativeUrl;
             var content = await MarkdownFile.ReadFromFile(file, pipeline);
-            string preview = content.GetPreview();
-            notes.Add(note, preview);
-            foreach (var link in content.Content.Descendants().OfType<WikiLink>())
+            var preview = content.GetPreview();
+            notePreviews.Add(noteUrl, preview);
+            foreach (var wikiLink in content.Content.Descendants().OfType<WikiLink>())
             {
-                var target = link.Url!;
-                if (!links.ContainsKey(target))
+                var target = wikiLink.Url!;
+                if (!backLinks.ContainsKey(target))
                 {
-                    links.Add(target, new List<string>());
+                    backLinks.Add(target, new List<string>());
                 }
-                links[target].Add(note);
+                backLinks[target].Add(noteUrl);
             }
         }
         var result = new Dictionary<string, ICottleEntry>();
-        foreach (var link in links)
+        foreach (var link in backLinks)
         {
             if (!result.ContainsKey(link.Key))
             {
@@ -101,7 +101,7 @@ internal class FileProcessor
             }
             foreach (var origin in link.Value)
             {
-                ((NoteLinkCollection)result[link.Key]).Add(NoteLink.FromUrl(origin, notes[origin]));
+                ((NoteLinkCollection)result[link.Key]).Add(NoteLink.FromUrl(origin, notePreviews[origin]));
             }
         }
         return result;
