@@ -3,7 +3,7 @@ using Ssg_Dotnet.Files;
 namespace Ssg_Dotnet.Test.FileSystemReliantTests;
 
 [TestFixture]
-public class FilePathTests
+internal class FilePathTests
 {
     [Test]
     public void ShouldCreatePath()

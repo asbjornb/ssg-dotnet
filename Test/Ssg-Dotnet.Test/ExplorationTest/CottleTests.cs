@@ -4,7 +4,7 @@ namespace Ssg_Dotnet.Test.ExplorationTest;
 
 //Some exploration of the Cottle library to assert that it supports the features wanted
 [TestFixture, Parallelizable(ParallelScope.Self)]
-public class CottleTests
+internal class CottleTests
 {
     [Test]
     public void ShouldReplace()

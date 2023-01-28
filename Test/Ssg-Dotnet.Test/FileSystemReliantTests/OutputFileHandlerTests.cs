@@ -3,7 +3,7 @@ using Ssg_Dotnet.Files;
 namespace Ssg_Dotnet.Test.FileSystemReliantTests;
 
 [TestFixture, Parallelizable(ParallelScope.Self)]
-public class OutputFileHandlerTests
+internal class OutputFileHandlerTests
 {
     private const string FileName = "now.md";
     private const string Content = "Some content";
