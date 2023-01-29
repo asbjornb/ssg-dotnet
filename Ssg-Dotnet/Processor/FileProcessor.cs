@@ -76,7 +76,7 @@ internal class FileProcessor
         var mdFilePaths = notesInputHandler.FindFiles(".md");
         var mdFiles = await Task.WhenAll(mdFilePaths.Select(async file => await MarkdownFile.ReadFromFile(file, pipeline)));
         var notePreviews = GetNotePreviews(mdFiles); //key: url, value: preview
-        var backLinks = GetBacklinks(mdFiles, notePreviews); //key: target, value: origins
+        var backLinks = GetBacklinks(mdFiles); //key: target, value: origins
 
         var result = new Dictionary<string, ICottleEntry>();
         foreach (var link in backLinks)
@@ -93,7 +93,7 @@ internal class FileProcessor
         return result;
     }
 
-    private static Dictionary<string, List<string>> GetBacklinks(IEnumerable<MarkdownFile> mdFiles, Dictionary<string, string> notePreviews)
+    private static Dictionary<string, List<string>> GetBacklinks(IEnumerable<MarkdownFile> mdFiles)
     {
         var backlinks = new Dictionary<string, List<string>>();
         foreach(var mdFile in mdFiles)
