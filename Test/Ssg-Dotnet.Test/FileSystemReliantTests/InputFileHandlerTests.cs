@@ -29,9 +29,10 @@ internal class InputFileHandlerTests
         const string FileName = "now.md";
         const string Content = "Some content";
         await helper.CreateFileWithContent(FileName, Content);
+        var filePath = FilePath.FromFullPath(Path.Combine(helper.FolderName, FileName), helper.FolderName);
 
         //Act
-        var content = await sut.ReadFileAsync(FileName);
+        var content = await InputFileHandler.ReadFileAsync(filePath);
 
         //Assert
         content.Should().Be(Content);
@@ -47,7 +48,7 @@ internal class InputFileHandlerTests
         files.Should().HaveCount(testFiles.Count);
         foreach (var file in testFiles)
         {
-            files.Should().Contain(file);
+            files.Select(x => x.RelativePath).Should().Contain(file);
         }
     }
 
@@ -62,7 +63,7 @@ internal class InputFileHandlerTests
         files.Should().HaveCount(expected.Count);
         foreach (var file in expected)
         {
-            files.Should().Contain(file);
+            files.Select( x => x.RelativePath).Should().Contain(file);
         }
     }
 }

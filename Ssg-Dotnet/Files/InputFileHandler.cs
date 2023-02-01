@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 namespace Ssg_Dotnet.Files;
 internal class InputFileHandler
 {
+    private readonly List<string> filters = new() { ".vscode", ".git", ".gitignore", ".noncontent" };
+
     private readonly string inputFolder;
 
     public InputFileHandler(string inputFolder)
@@ -15,22 +17,44 @@ internal class InputFileHandler
     }
 
     //Returns relative paths to files in the input folder
-    public IEnumerable<string> FindFiles(string extension)
+    public IEnumerable<FilePath> FindFiles(string extension)
     {
-        var files = Directory.GetFiles(inputFolder, $"*{extension}", SearchOption.AllDirectories);
-        return files.Select(x => Path.GetRelativePath(inputFolder, x));
+        var files = Directory.EnumerateFiles(inputFolder, $"*{extension}", SearchOption.AllDirectories);
+        var filteredFiles = Filter(files);
+        return filteredFiles.Select(x => FilePath.FromFullPath(x, inputFolder));
     }
 
     //Returns relative paths to files in the input folder
-    public IEnumerable<string> FindFiles()
+    public IEnumerable<FilePath> FindFiles()
     {
-        var files = Directory.GetFiles(inputFolder, "*.*", SearchOption.AllDirectories);
-        return files.Select(x => Path.GetRelativePath(inputFolder, x));
+        var files = Directory.EnumerateFiles(inputFolder, "*.*", SearchOption.AllDirectories);
+        var filteredFiles = Filter(files);
+        return filteredFiles.Select(x => FilePath.FromFullPath(x, inputFolder));
     }
 
-    public async Task<string> ReadFileAsync(string relativePath)
+    public static async Task<string> ReadFileAsync(FilePath path)
     {
-        var path = Path.Combine(inputFolder, relativePath);
-        return await File.ReadAllTextAsync(path);
+        return await File.ReadAllTextAsync(path.AbsolutePath);
+    }
+
+    private IEnumerable<string> Filter(IEnumerable<string> files)
+    {
+        //Use hardcoded filter for now - should be able to use .gitignore or other more dynamic filtering at some point
+        foreach (var file in files)
+        {
+            var ignore = false;
+            foreach (var filter in filters)
+            {
+                if (file.Contains(filter))
+                {
+                    ignore = true;
+                    break;
+                }
+            }
+            if (!ignore)
+            {
+                yield return file;
+            }
+        }
     }
 }

@@ -2,18 +2,24 @@ using Ssg_Dotnet.Files;
 
 namespace Ssg_Dotnet.Test.FileSystemReliantTests;
 
-[TestFixture]
+[TestFixture, Parallelizable(ParallelScope.Self)]
 internal class FilePathTests
 {
     [Test]
     public void ShouldCreatePath()
     {
-        var fullPath = Path.Combine("TestSamples", "now.md");
-        var filePath = FilePath.FromString(fullPath);
-        filePath.Should().NotBeNull();
-        filePath.RelativePath.Should().EndWith(fullPath);
-        filePath.DirectoryPath.Should().EndWith("TestSamples");
-        filePath.FileName.Should().Be("now");
-        filePath.Extension.Should().Be(".md");
+        const string BaseFolder = "BaseFolder";
+        const string SubFolder = "TestSamples";
+        const string FileName = "now";
+        const string Extension = ".md";
+        var fullPath = Path.Combine(BaseFolder, SubFolder, FileName + Extension);
+        var filePath = FilePath.FromFullPath(fullPath, BaseFolder);
+        filePath.RelativePath.Should().Be(Path.Combine(SubFolder, FileName + Extension));
+        filePath.RelativeDir.Should().Be(SubFolder);
+        filePath.FileName.Should().Be(FileName);
+        filePath.Extension.Should().Be(Extension);
+        filePath.FileNameWithExtension.Should().Be(FileName + Extension);
+        filePath.RelativeUrl.Should().Be(Path.Combine(SubFolder, FileName));
+        filePath.AbsolutePath.Should().Be(fullPath);
     }
 }
