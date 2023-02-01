@@ -17,14 +17,14 @@ internal class InputFileHandler
     //Returns relative paths to files in the input folder
     public IEnumerable<FilePath> FindFiles(string extension)
     {
-        var files = Directory.GetFiles(inputFolder, $"*{extension}", SearchOption.AllDirectories);
+        var files = Directory.EnumerateFiles(inputFolder, $"*{extension}", SearchOption.AllDirectories);
         return files.Select(x => FilePath.FromFullPath(x, inputFolder));
     }
 
     //Returns relative paths to files in the input folder
     public IEnumerable<FilePath> FindFiles()
     {
-        var files = Directory.GetFiles(inputFolder, "*.*", SearchOption.AllDirectories);
+        var files = Directory.EnumerateFiles(inputFolder, "*.*", SearchOption.AllDirectories);
         return files.Select(x => FilePath.FromFullPath(x, inputFolder));
     }
 
