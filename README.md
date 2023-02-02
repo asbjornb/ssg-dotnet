@@ -18,5 +18,5 @@ Some planned features:
 Some missing stuff in current markdown to html parsing - not all of those necessarily needed, but here to keep track:
 
 - [ ] Pipe tables
-- [ ] Auto parse email adresses/urls
-- [ ] Should notes be prefixed with "/notes/" when generating internal links? 
+- [ ] Auto parse email addresses/urls
+- [ ] Should notes be prefixed with "/notes/" when generating internal links?
