@@ -33,7 +33,7 @@ jobs:
         run: dotnet build Ssg-Dotnet.sln --configuration Release --no-restore
 
       - name: Test
-        run: dotnet test Ssg-Dotnet.sln --no-build --logger trx --results-directory "TestResults"
+        run: dotnet test Ssg-Dotnet.sln --no-build --configuration Release --logger trx --results-directory "TestResults"
         
       - name: Upload dotnet test results
         uses: actions/upload-artifact@v3
