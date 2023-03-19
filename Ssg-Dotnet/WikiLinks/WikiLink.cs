@@ -5,7 +5,7 @@ using Markdig.Syntax.Inlines;
 namespace Ssg_Dotnet.WikiLinks;
 
 //Extension that mostly serves to be able to find these in the "DOM" during processing and to ease creation of LinkInLine
-internal class WikiLink : LinkInline
+internal sealed class WikiLink : LinkInline
 {
     private WikiLink(string url, int start, int end, int line, int column) : base(url, "")
     {
@@ -14,7 +14,7 @@ internal class WikiLink : LinkInline
         Column = column;
         IsClosed = true;
     }
-    
+
     public static WikiLink Create(string url, int start, int end, int line, int column)
     {
         var link = new WikiLink(url, start, end, line, column);

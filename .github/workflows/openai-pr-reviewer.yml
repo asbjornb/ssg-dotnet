@@ -24,24 +24,20 @@ jobs:
       - name: Setup dotnet
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: '7.0.x'
 
       - name: Restore NuGet packages
-        run: dotnet restore
+        run: dotnet restore Ssg-Dotnet.sln
 
       - name: Build
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build Ssg-Dotnet.sln --configuration Release --no-restore
 
-  test:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
       - name: Test
-        run: dotnet test --configuration Release --no-build
+        run: dotnet test Ssg-Dotnet.sln --configuration Release --no-build
 
   review:
     runs-on: ubuntu-latest
-    needs: test
+    needs: build
     steps:
       - name: Review pull request
         uses: fluxninja/openai-pr-reviewer@main

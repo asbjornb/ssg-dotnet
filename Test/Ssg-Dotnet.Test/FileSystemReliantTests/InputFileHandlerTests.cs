@@ -63,7 +63,7 @@ internal class InputFileHandlerTests
         files.Should().HaveCount(expected.Count);
         foreach (var file in expected)
         {
-            files.Select( x => x.RelativePath).Should().Contain(file);
+            files.Select(x => x.RelativePath).Should().Contain(file);
         }
     }
 }

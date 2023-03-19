@@ -59,7 +59,7 @@ internal class FileProcessor
                     cottleValues.AddCottleEntry(individualFileContext);
                 }
                 var output = await templateHandler.RenderAsync(cottleValues);
-                
+
                 //switch extention to .html for outputFile:
                 var outputFile = file.ToIndexHtml();
                 await outputHandler.WriteFileAsync(outputFile.RelativePath, output);
@@ -96,7 +96,7 @@ internal class FileProcessor
     private static Dictionary<string, List<string>> GetBacklinks(IEnumerable<MarkdownFile> mdFiles)
     {
         var backlinks = new Dictionary<string, List<string>>();
-        foreach(var mdFile in mdFiles)
+        foreach (var mdFile in mdFiles)
         {
             foreach (var wikiLink in mdFile.GetDescendants<WikiLink>())
             {
@@ -114,7 +114,7 @@ internal class FileProcessor
     private static Dictionary<string, string> GetNotePreviews(IEnumerable<MarkdownFile> mdFiles)
     {
         var notePreviews = new Dictionary<string, string>();
-        foreach(var mdFile in mdFiles)
+        foreach (var mdFile in mdFiles)
         {
             notePreviews.Add(mdFile.RelativeUrl, mdFile.GetPreview());
         }
