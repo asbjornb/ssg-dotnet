@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33103.184
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ssg-Dotnet", "ssg-dotnet\Ssg-Dotnet.csproj", "{DAE95F16-F602-4A27-9647-8705EA8CF4D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ssg-Dotnet", "Ssg-Dotnet\Ssg-Dotnet.csproj", "{DAE95F16-F602-4A27-9647-8705EA8CF4D7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ssg-Dotnet.Test", "Test\Ssg-Dotnet.Test\Ssg-Dotnet.Test.csproj", "{9A37270C-0E8C-427E-BFA0-F5B5C7A682B9}"
 EndProject
