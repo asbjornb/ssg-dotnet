@@ -65,14 +65,10 @@ internal class OutputFileHandler
 
     //This might be slow to run for every file we handle
     //Should probably map entire file structure to memory and do this only once for the entire site
-    private void CreateSubDirs(string fullPath)
+    private static void CreateSubDirs(string fullPath)
     {
         //For each folder in path create it if it does not exist
-        var folderPath = Path.GetDirectoryName(fullPath);
-        if (folderPath is null)
-        {
-            throw new System.InvalidOperationException("Could not get directory from path: " + fullPath);
-        }
+        var folderPath = Path.GetDirectoryName(fullPath) ?? throw new System.InvalidOperationException("Could not get directory from path: " + fullPath);
         var folders = folderPath.Split(Path.DirectorySeparatorChar);
         var currentPath = "";
         foreach (var folder in folders)

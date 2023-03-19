@@ -9,7 +9,7 @@ namespace Ssg_Dotnet.Files;
 
 public sealed class MarkdownFile
 {
-    private FilePath path;
+    private readonly FilePath path;
 
     public MarkdownDocument Content { get; }
     public string RelativeUrl => path.RelativeUrl;

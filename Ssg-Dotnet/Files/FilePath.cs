@@ -4,7 +4,7 @@ namespace Ssg_Dotnet.Files;
 
 public sealed class FilePath
 {
-    private readonly string baseDir; 
+    private readonly string baseDir;
     public string RelativeDir { get; }
     public string FileName { get; }
     public string Extension { get; }
