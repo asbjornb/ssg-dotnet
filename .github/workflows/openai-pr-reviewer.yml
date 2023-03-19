@@ -19,10 +19,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup dotnet
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '7.0.x'
 
@@ -33,7 +33,14 @@ jobs:
         run: dotnet build Ssg-Dotnet.sln --configuration Release --no-restore
 
       - name: Test
-        run: dotnet test Ssg-Dotnet.sln --configuration Release --no-build
+        run: dotnet test Ssg-Dotnet.sln --no-build --configuration Release --logger trx --results-directory "TestResults"
+        
+      - name: Upload dotnet test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: dotnet-results
+          path: TestResults
+        if: ${{ always() }}
 
   review:
     runs-on: ubuntu-latest
