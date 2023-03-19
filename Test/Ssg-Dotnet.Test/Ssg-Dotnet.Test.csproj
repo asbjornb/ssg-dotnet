@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\ssg-dotnet\Ssg-Dotnet.csproj" />
+    <ProjectReference Include="./../../Ssg-Dotnet/Ssg-Dotnet.csproj" />
   </ItemGroup>
 
   <ItemGroup>

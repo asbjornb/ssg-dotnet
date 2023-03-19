@@ -43,7 +43,6 @@ internal class OutputFileHandlerTests
     [Test]
     public async Task ShouldCopyFile()
     {
-        //var newFolder = Path.Combine(filePath.DirectoryPath, "SubFolder");
         sut.CopyFile(FileName);
         var filePath = Path.Combine(outputHelper.FolderName, FileName);
 

@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 //Small wrapper collecting the functionality I need from System.File, System.Directory and System.Path
@@ -68,15 +70,17 @@ internal class OutputFileHandler
     private static void CreateSubDirs(string fullPath)
     {
         //For each folder in path create it if it does not exist
-        var folderPath = Path.GetDirectoryName(fullPath) ?? throw new System.InvalidOperationException("Could not get directory from path: " + fullPath);
+        var folderPath = Path.GetDirectoryName(fullPath) ?? throw new InvalidOperationException("Could not get directory from path: " + fullPath);
         var folders = folderPath.Split(Path.DirectorySeparatorChar);
-        var currentPath = "";
-        foreach (var folder in folders)
+        //Initialize to OS-specific root folder
+        var currentPath = Path.GetPathRoot(folderPath) ?? throw new InvalidOperationException("Could not get root path from path: " + folderPath);
+        var nonRootfolders = folders.Where(x => x != currentPath);
+        foreach (var folder in nonRootfolders)
         {
             currentPath = Path.Combine(currentPath, folder);
-            if (!Directory.Exists(currentPath))
+            if (!Directory.Exists(currentPath) && !string.IsNullOrEmpty(currentPath))
             {
-                Directory.CreateDirectory(currentPath);
+                var created = Directory.CreateDirectory(currentPath);
             }
         }
     }

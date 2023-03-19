@@ -9,9 +9,9 @@ namespace Ssg_Dotnet.Test.ProcessorTests;
 internal class SampleTests
 {
     private readonly string inputFolder = Path.Combine("TestSamples", "Input", "Content");
-    private readonly string contentTemplatePath = Path.Combine("TestSamples", "Input", "Layouts", "default.Html");
+    private readonly string contentTemplatePath = Path.Combine("TestSamples", "Input", "Layouts", "default.html");
     private readonly string notesFolder = Path.Combine("TestSamples", "Input", "Notes");
-    private readonly string noteTemplatePath = Path.Combine("TestSamples", "Input", "Layouts", "note.Html");
+    private readonly string noteTemplatePath = Path.Combine("TestSamples", "Input", "Layouts", "note.html");
     private const string OutputFolder = "TestOutput";
     private FileProcessor sut;
 
